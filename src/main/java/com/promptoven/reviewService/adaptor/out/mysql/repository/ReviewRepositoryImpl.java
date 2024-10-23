@@ -20,8 +20,13 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
         reviewJpaRepository.save(reviewEntityMapper.toEntity(reviewTransactionDto));
     }
 
+    public void update(ReviewTransactionDto reviewTransactionDto) {
+        reviewJpaRepository.save(reviewEntityMapper.toUpdateEntity(reviewTransactionDto));
+    }
+
     @Override
     public ReviewTransactionDto getReviewByReviewId(Long reviewId) {
+
         ReviewEntity reviewEntity = reviewJpaRepository.findByReviewId(reviewId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found"));
 

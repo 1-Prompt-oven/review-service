@@ -30,7 +30,7 @@ public class ReviewController {
 
     @PutMapping
     public ResponseEntity<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
-         reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewRequestVo));
+        reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewRequestVo));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
