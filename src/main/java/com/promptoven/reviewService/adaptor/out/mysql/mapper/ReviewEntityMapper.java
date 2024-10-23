@@ -16,4 +16,29 @@ public class ReviewEntityMapper {
                 .isDeleted(reviewTransactionDto.getIsDeleted())
                 .build();
     }
+
+    public ReviewEntity toUpdateEntity(ReviewTransactionDto reviewTransactionDto) {
+        return ReviewEntity.builder()
+                .reviewId(reviewTransactionDto.getId())
+                .productUuid(reviewTransactionDto.getProductUuid())
+                .memberUuid(reviewTransactionDto.getMemberUuid())
+                .star(reviewTransactionDto.getStar())
+                .contents(reviewTransactionDto.getContents())
+                .isDeleted(reviewTransactionDto.getIsDeleted())
+                .build();
+    }
+
+    public ReviewTransactionDto toDto(ReviewEntity reviewEntity) {
+        return ReviewTransactionDto.builder()
+                .id(reviewEntity.getReviewId())
+                .productUuid(reviewEntity.getProductUuid())
+                .memberUuid(reviewEntity.getMemberUuid())
+                .star(reviewEntity.getStar())
+                .contents(reviewEntity.getContents())
+                .isDeleted(reviewEntity.getIsDeleted())
+                .createdAt(reviewEntity.getCreatedAt())
+                .updatedAt(reviewEntity.getUpdatedAt())
+                .build();
+    }
+
 }
