@@ -1,5 +1,6 @@
 package com.promptoven.reviewService.application.mapper;
 
+import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.application.port.out.ReviewTransactionDto;
 import com.promptoven.reviewService.domain.model.Review;
 import org.springframework.stereotype.Component;
