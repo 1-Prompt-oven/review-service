@@ -33,4 +33,11 @@ public class ReviewService implements ReviewUseCase {
         reviewRepositoryPort.update(reviewDtoMapper.toDto(review));
     }
 
+    @Override
+    public void deleteReview(Long reviewId) {
+        ReviewTransactionDto reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
+        Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+        reviewRepositoryPort.delete(reviewDtoMapper.toDto(review));
+    }
+
 }

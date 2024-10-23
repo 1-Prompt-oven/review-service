@@ -39,7 +39,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") String reviewId) {
+    public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewUseCase.deleteReview(reviewId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

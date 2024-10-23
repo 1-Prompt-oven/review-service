@@ -28,6 +28,17 @@ public class ReviewEntityMapper {
                 .build();
     }
 
+    public ReviewEntity toDeleteEntity(ReviewTransactionDto reviewTransactionDto) {
+        return ReviewEntity.builder()
+                .reviewId(reviewTransactionDto.getId())
+                .productUuid(reviewTransactionDto.getProductUuid())
+                .memberUuid(reviewTransactionDto.getMemberUuid())
+                .star(reviewTransactionDto.getStar())
+                .contents(reviewTransactionDto.getContents())
+                .isDeleted(reviewTransactionDto.getIsDeleted())
+                .build();
+    }
+
     public ReviewTransactionDto toDto(ReviewEntity reviewEntity) {
         return ReviewTransactionDto.builder()
                 .id(reviewEntity.getReviewId())
