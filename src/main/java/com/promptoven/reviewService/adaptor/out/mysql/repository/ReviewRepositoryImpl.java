@@ -25,6 +25,11 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     }
 
     @Override
+    public void delete(ReviewTransactionDto reviewTransactionDto) {
+        reviewJpaRepository.save(reviewEntityMapper.toDeleteEntity(reviewTransactionDto));
+    }
+
+    @Override
     public ReviewTransactionDto getReviewByReviewId(Long reviewId) {
 
         ReviewEntity reviewEntity = reviewJpaRepository.findByReviewId(reviewId)
