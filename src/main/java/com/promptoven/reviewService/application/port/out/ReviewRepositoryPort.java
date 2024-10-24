@@ -6,4 +6,5 @@ public interface ReviewRepositoryPort {
     void save(ReviewTransactionDto reviewTransactionDto);
     void update(ReviewTransactionDto reviewTransactionDto);
     Optional<ReviewTransactionDto> getReviewByReviewId(Long reviewId);
+    void delete(ReviewTransactionDto reviewTransactionDto);
 }

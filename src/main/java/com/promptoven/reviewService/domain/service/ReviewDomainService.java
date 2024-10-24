@@ -28,4 +28,15 @@ public class ReviewDomainService {
                 .isDeleted(reviewRequestDto.getIsDeleted())
                 .build();
     }
+
+    public Review deleteReview(ReviewTransactionDto reviewTransactionDto) {
+        return Review.builder()
+                .id(reviewTransactionDto.getId())
+                .productUuid(reviewTransactionDto.getProductUuid())
+                .memberUuid(reviewTransactionDto.getMemberUuid())
+                .star(reviewTransactionDto.getStar())
+                .contents(reviewTransactionDto.getContents())
+                .isDeleted(true)
+                .build();
+    }
 }

@@ -17,10 +17,12 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     private final ReviewJpaRepository reviewJpaRepository;
     private final ReviewEntityMapper reviewEntityMapper;
 
+    @Override
     public void save(ReviewTransactionDto reviewTransactionDto) {
         reviewJpaRepository.save(reviewEntityMapper.toEntity(reviewTransactionDto));
     }
-
+  
+    @Override
     public void update(ReviewTransactionDto reviewTransactionDto) {
         reviewJpaRepository.save(reviewEntityMapper.toUpdateEntity(reviewTransactionDto));
     }
@@ -28,6 +30,10 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     @Override
     public Optional<ReviewTransactionDto> getReviewByReviewId(Long reviewId) {
         return reviewJpaRepository.findByReviewId(reviewId).map(reviewEntityMapper::toDto);
+
+    @Override
+    public void delete(ReviewTransactionDto reviewTransactionDto) {
+        reviewJpaRepository.save(reviewEntityMapper.toDeleteEntity(reviewTransactionDto));
     }
 }
 
