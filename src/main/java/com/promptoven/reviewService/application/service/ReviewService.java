@@ -10,7 +10,9 @@ import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +43,14 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void deleteReview(Long reviewId) {
-        ReviewTransactionDto reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
-        Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+        Optional<ReviewTransactionDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
+
+        if (reviewTransactionDto.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
+        }
+
+        Review review = reviewDomainService.deleteReview(reviewTransactionDto.get());
+
         reviewRepositoryPort.delete(reviewDtoMapper.toDto(review));
     }
 
