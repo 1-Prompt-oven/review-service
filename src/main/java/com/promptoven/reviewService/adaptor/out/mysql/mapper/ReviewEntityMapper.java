@@ -2,6 +2,7 @@ package com.promptoven.reviewService.adaptor.out.mysql.mapper;
 
 import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.application.port.out.ReviewTransactionDto;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,6 +40,10 @@ public class ReviewEntityMapper {
                 .createdAt(reviewEntity.getCreatedAt())
                 .updatedAt(reviewEntity.getUpdatedAt())
                 .build();
+    }
+
+    public Optional<ReviewTransactionDto> toDto(Optional<ReviewEntity> reviewEntity) {
+        return reviewEntity.map(this::toDto);
     }
 
 }

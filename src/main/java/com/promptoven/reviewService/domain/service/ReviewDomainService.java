@@ -25,7 +25,7 @@ public class ReviewDomainService {
                 .memberUuid(reviewTransactionDto.getMemberUuid())
                 .star(reviewRequestDto.getStar())
                 .contents(reviewRequestDto.getContents())
-                .isDeleted(false)
+                .isDeleted(reviewRequestDto.getIsDeleted())
                 .build();
     }
 }
