@@ -4,8 +4,10 @@ import com.promptoven.reviewService.adaptor.in.web.mapper.ReviewVoMapper;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
+import com.promptoven.reviewService.application.port.in.ReviewRequestDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import io.swagger.v3.oas.annotations.Parameter;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -48,9 +50,8 @@ public class ReviewController {
     }
 
     @GetMapping("/{productUuid}")
-    public ResponseEntity<ReviewResponseVo> getReview(@PathVariable("productUuid") String productUuid) {
-
-
-        return null;
+    public ResponseEntity<List<ReviewResponseVo>> getReview(@PathVariable("productUuid") String productUuid) {
+        List<ReviewRequestDto> reviewRequestDtoList = reviewUseCase.getReview(productUuid);
+        return new ResponseEntity<>(reviewVoMapper.toVoList(reviewRequestDtoList), HttpStatus.OK);
     }
 }
