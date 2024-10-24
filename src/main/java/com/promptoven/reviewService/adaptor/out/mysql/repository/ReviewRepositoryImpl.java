@@ -30,6 +30,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     @Override
     public Optional<ReviewTransactionDto> getReviewByReviewId(Long reviewId) {
         return reviewJpaRepository.findByReviewId(reviewId).map(reviewEntityMapper::toDto);
+    }
 
     @Override
     public void delete(ReviewTransactionDto reviewTransactionDto) {
