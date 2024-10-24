@@ -1,11 +1,10 @@
 package com.promptoven.reviewService.application.service;
 
-import com.promptoven.reviewService.adaptor.out.mysql.repository.ReviewJpaRepository;
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewRequestDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
-import com.promptoven.reviewService.application.port.out.ReviewTransactionDto;
+import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void updateReview(ReviewRequestDto reviewRequestDto) {
-        Optional<ReviewTransactionDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(
+        Optional<ReviewOutPortDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(
                 reviewRequestDto.getId());
 
         if (reviewTransactionDto.isEmpty()) {
@@ -43,7 +42,7 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void deleteReview(Long reviewId) {
-        Optional<ReviewTransactionDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
+        Optional<ReviewOutPortDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
 
         if (reviewTransactionDto.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
