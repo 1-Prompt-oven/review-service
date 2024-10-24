@@ -1,14 +1,14 @@
 package com.promptoven.reviewService.application.mapper;
 
-import com.promptoven.reviewService.application.port.out.ReviewTransactionDto;
+import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewDtoMapper {
 
-    public ReviewTransactionDto toDto(Review review) {
-        return ReviewTransactionDto.builder()
+    public ReviewOutPortDto toDto(Review review) {
+        return ReviewOutPortDto.builder()
                 .id(review.getId())
                 .productUuid(review.getProductUuid())
                 .memberUuid(review.getMemberUuid())
