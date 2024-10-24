@@ -7,6 +7,7 @@ import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,15 @@ public class ReviewService implements ReviewUseCase {
         Review review = reviewDomainService.deleteReview(reviewTransactionDto.get());
 
         reviewRepositoryPort.delete(reviewDtoMapper.toDto(review));
+    }
+
+    @Override
+    public List<ReviewRequestDto> getReview(String productUuid) {
+        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewsByProductUuid(productUuid);
+
+        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoList);
+
+        return reviewDtoMapper.toDtoList(reviewList);
     }
 
 }
