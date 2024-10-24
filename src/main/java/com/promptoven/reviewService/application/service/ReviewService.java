@@ -8,6 +8,7 @@ import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.application.port.out.ReviewTransactionDto;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,14 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void updateReview(ReviewRequestDto reviewRequestDto) {
-        ReviewTransactionDto reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewRequestDto.getId());
+        Optional<ReviewTransactionDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(
+                reviewRequestDto.getId());
 
-        Review review = reviewDomainService.updateReview(reviewTransactionDto, reviewRequestDto);
+        if (reviewTransactionDto.isEmpty()) {
+            throw new RuntimeException("Review not found");
+        }
+
+        Review review = reviewDomainService.updateReview(reviewTransactionDto.get(), reviewRequestDto);
 
         reviewRepositoryPort.update(reviewDtoMapper.toDto(review));
     }
