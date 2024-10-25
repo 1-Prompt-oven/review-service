@@ -1,10 +1,12 @@
 package com.promptoven.reviewService.application.port.out;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepositoryPort {
-    void save(ReviewTransactionDto reviewTransactionDto);
-    void update(ReviewTransactionDto reviewTransactionDto);
-    Optional<ReviewTransactionDto> getReviewByReviewId(Long reviewId);
-    void delete(ReviewTransactionDto reviewTransactionDto);
+    void save(ReviewOutPortDto reviewOutPortDto);
+    void update(ReviewOutPortDto reviewOutPortDto);
+    void delete(ReviewOutPortDto reviewOutPortDto);
+    Optional<ReviewOutPortDto> getReviewByReviewId(Long reviewId);
+    List<ReviewOutPortDto> getReviewsByProductUuid(String productUuid);
 }
