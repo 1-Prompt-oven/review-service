@@ -1,5 +1,7 @@
 package com.promptoven.reviewService.application.service;
 
+import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
+
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewRequestDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
@@ -7,6 +9,7 @@ import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
+import com.promptoven.reviewService.global.error.BaseException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +36,7 @@ public class ReviewService implements ReviewUseCase {
                 reviewRequestDto.getId());
 
         if (reviewTransactionDto.isEmpty()) {
-            throw new RuntimeException("Review not found");
+            throw new BaseException(NO_EXIST_REVIEW);
         }
 
         Review review = reviewDomainService.updateReview(reviewTransactionDto.get(), reviewRequestDto);
@@ -46,7 +49,7 @@ public class ReviewService implements ReviewUseCase {
         Optional<ReviewOutPortDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
 
         if (reviewTransactionDto.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
+            throw new BaseException(NO_EXIST_REVIEW);
         }
 
         Review review = reviewDomainService.deleteReview(reviewTransactionDto.get());
