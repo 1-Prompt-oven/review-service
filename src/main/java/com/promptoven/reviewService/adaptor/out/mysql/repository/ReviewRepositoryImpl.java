@@ -32,7 +32,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
 
     @Override
     public List<ReviewOutPortDto> getReviewsByProductUuid(String productUuid) {
-        return reviewJpaRepository.findByProductUuidAndIsDeletedFalse(productUuid).stream().map(reviewEntityMapper::toDto)
+        return reviewJpaRepository.findByProductUuidAndIsDeletedFalse(productUuid).stream()
+                .map(reviewEntityMapper::toDto)
                 .toList();
     }
 

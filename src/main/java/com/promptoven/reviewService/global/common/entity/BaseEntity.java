@@ -1,4 +1,4 @@
-package com.promptoven.reviewService.common.entity;
+package com.promptoven.reviewService.global.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

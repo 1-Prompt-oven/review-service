@@ -3,14 +3,15 @@ package com.promptoven.reviewService.adaptor.in.web.mapper;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
-import com.promptoven.reviewService.application.port.in.ReviewRequestDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewVoMapper {
-    public ReviewRequestDto toDto(ReviewRequestVo reviewRequestVo) {
-        return ReviewRequestDto.builder()
+
+    public ReviewInPortDto toDto(ReviewRequestVo reviewRequestVo) {
+        return ReviewInPortDto.builder()
                 .productUuid(reviewRequestVo.getProductUuid())
                 .memberUuid(reviewRequestVo.getMemberUuid())
                 .star(reviewRequestVo.getStar())
@@ -18,8 +19,8 @@ public class ReviewVoMapper {
                 .build();
     }
 
-    public ReviewRequestDto toUpdateDto(ReviewUpdateRequestVo reviewUpdateRequestVo) {
-        return ReviewRequestDto.builder()
+    public ReviewInPortDto toUpdateDto(ReviewUpdateRequestVo reviewUpdateRequestVo) {
+        return ReviewInPortDto.builder()
                 .id(reviewUpdateRequestVo.getReviewId())
                 .productUuid(reviewUpdateRequestVo.getProductUuid())
                 .star(reviewUpdateRequestVo.getStar())
@@ -27,8 +28,8 @@ public class ReviewVoMapper {
                 .build();
     }
 
-    public List<ReviewResponseVo> toVoList(List<ReviewRequestDto> reviewRequestDtoList) {
-        return reviewRequestDtoList.stream().map(reviewRequestDto -> ReviewResponseVo.builder()
+    public List<ReviewResponseVo> toVoList(List<ReviewInPortDto> reviewInPortDtoList) {
+        return reviewInPortDtoList.stream().map(reviewRequestDto -> ReviewResponseVo.builder()
                 .id(reviewRequestDto.getId())
                 .productUuid(reviewRequestDto.getProductUuid())
                 .memberUuid(reviewRequestDto.getMemberUuid())
