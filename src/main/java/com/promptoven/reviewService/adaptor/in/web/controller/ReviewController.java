@@ -6,6 +6,8 @@ import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
 import com.promptoven.reviewService.application.port.in.ReviewRequestDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
+import com.promptoven.reviewService.global.common.response.BaseResponse;
+import com.promptoven.reviewService.global.common.response.BaseResponseStatus;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import lombok.Getter;
@@ -32,26 +34,26 @@ public class ReviewController {
     private final ReviewVoMapper reviewVoMapper;
 
     @PostMapping
-    public ResponseEntity<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
+    public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
         reviewUseCase.createReview(reviewVoMapper.toDto(reviewRequestVo));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
+    public BaseResponse<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
         reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewRequestVo));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
+    public BaseResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewUseCase.deleteReview(reviewId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @GetMapping("/{productUuid}")
-    public ResponseEntity<List<ReviewResponseVo>> getReview(@PathVariable("productUuid") String productUuid) {
+    public BaseResponse<List<ReviewResponseVo>> getReview(@PathVariable("productUuid") String productUuid) {
         List<ReviewRequestDto> reviewRequestDtoList = reviewUseCase.getReview(productUuid);
-        return new ResponseEntity<>(reviewVoMapper.toVoList(reviewRequestDtoList), HttpStatus.OK);
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewVoMapper.toVoList(reviewRequestDtoList));
     }
 }

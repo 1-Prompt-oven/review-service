@@ -1,6 +1,6 @@
 package com.promptoven.reviewService.adaptor.out.mysql.entity;
 
-import com.promptoven.reviewService.common.entity.BaseEntity;
+import com.promptoven.reviewService.global.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
