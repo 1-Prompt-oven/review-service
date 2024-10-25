@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReviewEntity extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
@@ -36,7 +37,8 @@ public class ReviewEntity extends BaseEntity {
     private Boolean isDeleted;
 
     @Builder
-    public ReviewEntity(Long reviewId, String productUuid, String memberUuid, int star, String contents, Boolean isDeleted) {
+    public ReviewEntity(Long reviewId, String productUuid, String memberUuid, int star, String contents,
+            Boolean isDeleted) {
         this.reviewId = reviewId;
         this.productUuid = productUuid;
         this.memberUuid = memberUuid;

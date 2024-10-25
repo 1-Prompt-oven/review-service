@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReviewRequestDto {
+public class ReviewInPortDto {
 
     private Long id;
     private String productUuid;
@@ -19,7 +19,7 @@ public class ReviewRequestDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public ReviewRequestDto(Long id, String productUuid, String memberUuid, int star, String contents,
+    public ReviewInPortDto(Long id, String productUuid, String memberUuid, int star, String contents,
             Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.productUuid = productUuid;

@@ -19,8 +19,8 @@ public class Review {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Review(Long id, String productUuid, String memberUuid, int star, String contents, Boolean isDeleted ,LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public Review(Long id, String productUuid, String memberUuid, int star, String contents, Boolean isDeleted,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.productUuid = productUuid;
         this.memberUuid = memberUuid;
