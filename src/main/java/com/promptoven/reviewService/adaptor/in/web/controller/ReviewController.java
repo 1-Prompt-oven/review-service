@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/v1/member/review")
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -31,28 +31,38 @@ public class ReviewController {
     @Operation(summary = "리뷰 작성 API", tags = {"리뷰"})
     @PostMapping
     public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
-        reviewUseCase.createReview(reviewVoMapper.toDto(reviewRequestVo));
+
+        ReviewInPortDto reviewInPortDto = reviewVoMapper.toDto(reviewRequestVo);
+        reviewUseCase.createReview(reviewInPortDto);
+
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "리뷰 수정 API", tags = {"리뷰"})
     @PutMapping
     public BaseResponse<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
-        reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewRequestVo));
+
+        ReviewInPortDto reviewInPortDto = reviewVoMapper.toUpdateDto(reviewRequestVo);
+        reviewUseCase.updateReview(reviewInPortDto);
+
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "리뷰 삭제 API", tags = {"리뷰"})
     @DeleteMapping("/{reviewId}")
     public BaseResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
+
         reviewUseCase.deleteReview(reviewId);
+
         return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 
     @Operation(summary = "리뷰 조회 API", tags = {"리뷰"})
     @GetMapping("/{productUuid}")
     public BaseResponse<List<ReviewResponseVo>> getReview(@PathVariable("productUuid") String productUuid) {
+
         List<ReviewInPortDto> reviewInPortDtoList = reviewUseCase.getReview(productUuid);
+
         return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewVoMapper.toVoList(reviewInPortDtoList));
     }
 }
