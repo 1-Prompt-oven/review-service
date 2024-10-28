@@ -48,6 +48,8 @@ public class ReviewDomainService {
                 .memberUuid(reviewOutPortDto.getMemberUuid())
                 .star(reviewOutPortDto.getStar())
                 .contents(reviewOutPortDto.getContents())
+                .createdAt(reviewOutPortDto.getCreatedAt())
+                .updatedAt(reviewOutPortDto.getUpdatedAt())
                 .build()).toList();
     }
 }

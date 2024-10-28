@@ -35,7 +35,7 @@ public class ReviewController {
         ReviewInPortDto reviewInPortDto = reviewVoMapper.toDto(reviewRequestVo);
         reviewUseCase.createReview(reviewInPortDto);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        return new BaseResponse<>();
     }
 
     @Operation(summary = "리뷰 수정 API", tags = {"리뷰"})
@@ -45,7 +45,7 @@ public class ReviewController {
         ReviewInPortDto reviewInPortDto = reviewVoMapper.toUpdateDto(reviewRequestVo);
         reviewUseCase.updateReview(reviewInPortDto);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        return new BaseResponse<>();
     }
 
     @Operation(summary = "리뷰 삭제 API", tags = {"리뷰"})
@@ -54,7 +54,7 @@ public class ReviewController {
 
         reviewUseCase.deleteReview(reviewId);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
+        return new BaseResponse<>();
     }
 
     @Operation(summary = "리뷰 조회 API", tags = {"리뷰"})
@@ -63,6 +63,6 @@ public class ReviewController {
 
         List<ReviewInPortDto> reviewInPortDtoList = reviewUseCase.getReview(productUuid);
 
-        return new BaseResponse<>(BaseResponseStatus.SUCCESS, reviewVoMapper.toVoList(reviewInPortDtoList));
+        return new BaseResponse<>(reviewVoMapper.toVoList(reviewInPortDtoList));
     }
 }

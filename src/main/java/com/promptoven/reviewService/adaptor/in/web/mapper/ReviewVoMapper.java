@@ -22,7 +22,6 @@ public class ReviewVoMapper {
     public ReviewInPortDto toUpdateDto(ReviewUpdateRequestVo reviewUpdateRequestVo) {
         return ReviewInPortDto.builder()
                 .id(reviewUpdateRequestVo.getReviewId())
-                .productUuid(reviewUpdateRequestVo.getProductUuid())
                 .star(reviewUpdateRequestVo.getStar())
                 .contents(reviewUpdateRequestVo.getContents())
                 .build();
@@ -35,6 +34,8 @@ public class ReviewVoMapper {
                 .memberUuid(reviewRequestDto.getMemberUuid())
                 .star(reviewRequestDto.getStar())
                 .content(reviewRequestDto.getContents())
+                .createdAt(reviewRequestDto.getCreatedAt())
+                .updatedAt(reviewRequestDto.getUpdatedAt())
                 .build()).toList();
     }
 }
