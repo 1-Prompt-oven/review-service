@@ -1,16 +1,19 @@
 package com.promptoven.reviewService.adaptor.in.web.controller;
 
 import com.promptoven.reviewService.adaptor.in.web.mapper.ReviewVoMapper;
+import com.promptoven.reviewService.adaptor.in.web.vo.ReviewGetRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.ReviewPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.global.common.response.BaseResponse;
 import com.promptoven.reviewService.global.common.response.BaseResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/member/review")
 @RequiredArgsConstructor
@@ -58,11 +62,22 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 조회 API", tags = {"리뷰"})
-    @GetMapping("/{productUuid}")
-    public BaseResponse<List<ReviewResponseVo>> getReview(@PathVariable("productUuid") String productUuid) {
+    @GetMapping
+    public BaseResponse<List<ReviewResponseVo>> getReview(@RequestBody ReviewGetRequestVo reviewGetRequestVo) {
 
-        List<ReviewInPortDto> reviewInPortDtoList = reviewUseCase.getReview(productUuid);
+        ReviewPaginationDto reviewPaginationDto = reviewVoMapper.toPaginationDto(reviewGetRequestVo);
+
+        log.info("reviewPaginationDto: {}", reviewPaginationDto.toString());
+
+        List<ReviewInPortDto> reviewInPortDtoList = reviewUseCase.getReview(reviewPaginationDto);
 
         return new BaseResponse<>(reviewVoMapper.toVoList(reviewInPortDtoList));
     }
+
+//    @Operation(summary = "리뷰 상세 조회 API", tags = {"리뷰"})
+//    @GetMapping("/{reviewId}")
+//    public BaseResponse<ReviewResponseVo> getReviewDetail(@PathVariable("reviewId") Long reviewId) {
+//        return null;
+//    }
+
 }

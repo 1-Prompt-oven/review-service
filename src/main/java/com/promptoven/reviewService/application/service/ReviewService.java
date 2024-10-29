@@ -2,18 +2,24 @@ package com.promptoven.reviewService.application.service;
 
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
+import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
+import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.ReviewPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
+import com.promptoven.reviewService.global.common.utils.CursorPage;
 import com.promptoven.reviewService.global.error.BaseException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewService implements ReviewUseCase {
@@ -56,12 +62,28 @@ public class ReviewService implements ReviewUseCase {
     }
 
     @Override
-    public List<ReviewInPortDto> getReview(String productUuid) {
+    public List<ReviewInPortDto> getReview(ReviewPaginationDto reviewPaginationDto) {
+        CursorPage<ReviewOutPortDto> reviewOutPortDtoCursorPage = reviewRepositoryPort.getReviewByProductUuid(
+                reviewPaginationDto);
 
-        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewsByProductUuid(productUuid);
-        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoList);
+        log.info("reviewOutPortDtoCursorPage: {}", reviewOutPortDtoCursorPage);
 
-        return reviewDtoMapper.toDtoList(reviewList);
+        return List.of();
     }
+
+//    @Override
+//    public List<ReviewInPortDto> getReview(String productUuid) {
+//
+//        CursorPage<ReviewOutPortDto> reviewOutPortDtoCursorPage = reviewRepositoryPort.getReviewByProductUuid(
+//                productUuid, null, null, null);
+//
+//        log.info("reviewOutPortDtoCursorPage: {}", reviewOutPortDtoCursorPage);
+//
+//        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewsByProductUuid(productUuid);
+//        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoList);
+//
+//        return reviewDtoMapper.toDtoList(reviewList);
+//    }
+
 
 }
