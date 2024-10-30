@@ -3,7 +3,8 @@ package com.promptoven.reviewService.adaptor.out.mysql.repository;
 import com.promptoven.reviewService.adaptor.out.mysql.entity.QReviewEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.mapper.ReviewEntityMapper;
-import com.promptoven.reviewService.application.port.in.ReviewPaginationDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
+import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.global.common.utils.CursorPage;
@@ -57,13 +58,13 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     }
 
     @Override
-    public CursorPage<ReviewOutPortDto> getReviewByProductUuid(ReviewPaginationDto reviewPaginationDto) {
+    public ReviewOutPaginationDto getReviewByProductUuid(ReviewInPaginationDto reviewInPaginationDto) {
 
-        String productUuid = reviewPaginationDto.getProductUuid();
-        LocalDateTime lastCreatedAt = reviewPaginationDto.getLastCreatedAt();
-        Long lastId = reviewPaginationDto.getLastId();
-        Integer pageSize = reviewPaginationDto.getPageSize();
-        Integer page = reviewPaginationDto.getPage();
+        String productUuid = reviewInPaginationDto.getProductUuid();
+        LocalDateTime lastCreatedAt = reviewInPaginationDto.getLastCreatedAt();
+        Long lastId = reviewInPaginationDto.getLastId();
+        Integer pageSize = reviewInPaginationDto.getPageSize();
+        Integer page = reviewInPaginationDto.getPage();
 
         System.out.println("productUuid = " + productUuid);
         System.out.println("lastCreatedAt = " + lastCreatedAt);
@@ -110,8 +111,17 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
                 .map(reviewEntityMapper::toDto)
                 .toList();
 
-        return new CursorPage<>(reviewOutPortDtoList, nextReviewId, nextCreatedAt, hasNext, currentPageSize,
-                Optional.ofNullable(page).orElse(DEFAULT_PAGE_NUMBER));
+        return ReviewOutPaginationDto.builder()
+                .reviewOutPortDtoList(reviewOutPortDtoList)
+                .hasNext(hasNext)
+                .lastCreatedAt(nextCreatedAt)
+                .lastId(nextReviewId)
+                .page(Optional.ofNullable(page).orElse(DEFAULT_PAGE_NUMBER))
+                .pageSize(currentPageSize)
+                .build();
+
+//        return new CursorPage<>(reviewOutPortDtoList, nextReviewId, nextCreatedAt, hasNext, currentPageSize,
+//                Optional.ofNullable(page).orElse(DEFAULT_PAGE_NUMBER));
     }
 }
 

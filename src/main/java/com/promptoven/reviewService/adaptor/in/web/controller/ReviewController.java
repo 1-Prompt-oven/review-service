@@ -1,17 +1,16 @@
 package com.promptoven.reviewService.adaptor.in.web.controller;
 
 import com.promptoven.reviewService.adaptor.in.web.mapper.ReviewVoMapper;
-import com.promptoven.reviewService.adaptor.in.web.vo.ReviewGetRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
-import com.promptoven.reviewService.application.port.in.ReviewPaginationDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.global.common.response.BaseResponse;
-import com.promptoven.reviewService.global.common.response.BaseResponseStatus;
+import com.promptoven.reviewService.global.common.utils.CursorPage;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.List;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -63,21 +63,19 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 조회 API", tags = {"리뷰"})
     @GetMapping
-    public BaseResponse<List<ReviewResponseVo>> getReview(@RequestBody ReviewGetRequestVo reviewGetRequestVo) {
+    public BaseResponse<CursorPage<ReviewResponseVo>> getReview(@RequestParam(required = false) String productUuid,
+            @RequestParam(required = false) LocalDateTime lastCreatedAt,
+            @RequestParam(required = false) Long lastId, @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) Integer page) {
 
-        ReviewPaginationDto reviewPaginationDto = reviewVoMapper.toPaginationDto(reviewGetRequestVo);
+        ReviewInPaginationDto reviewInPaginationDto = reviewVoMapper.toPaginationDto(productUuid, lastCreatedAt, lastId,
+                pageSize, page);
 
-        log.info("reviewPaginationDto: {}", reviewPaginationDto.toString());
+        log.info("reviewPaginationDto: {}", reviewInPaginationDto.toString());
 
-        List<ReviewInPortDto> reviewInPortDtoList = reviewUseCase.getReview(reviewPaginationDto);
+        ReviewInPaginationDto reviewResponsePaginationDto = reviewUseCase.getReview(reviewInPaginationDto);
 
-        return new BaseResponse<>(reviewVoMapper.toVoList(reviewInPortDtoList));
+        return new BaseResponse<>(reviewVoMapper.toCursorPage(reviewResponsePaginationDto));
     }
-
-//    @Operation(summary = "리뷰 상세 조회 API", tags = {"리뷰"})
-//    @GetMapping("/{reviewId}")
-//    public BaseResponse<ReviewResponseVo> getReviewDetail(@PathVariable("reviewId") Long reviewId) {
-//        return null;
-//    }
 
 }

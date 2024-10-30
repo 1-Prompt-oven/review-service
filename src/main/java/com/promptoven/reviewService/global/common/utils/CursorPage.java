@@ -13,21 +13,22 @@ import lombok.ToString;
 public class CursorPage<T> {
 
     private List<T> content;
-    private LocalDateTime nextCreatedAt;
-    private Long nextCursor;
+    private LocalDateTime lastCreatedAt;
+    private Long lastId;
     private Boolean hasNext;
     private Integer pageSize;
     private Integer page;
 
     public boolean hasNext() {
-        return nextCursor != null;
+        return lastId != null;
     }
 
     @Builder
-    public CursorPage(List<T> content, Long nextCursor, LocalDateTime nextCreatedAt, Boolean hasNext, Integer pageSize, Integer page) {
+    public CursorPage(List<T> content, Long lastId, LocalDateTime lastCreatedAt, Boolean hasNext, Integer pageSize,
+            Integer page) {
         this.content = content;
-        this.nextCreatedAt = nextCreatedAt;
-        this.nextCursor = nextCursor;
+        this.lastCreatedAt = lastCreatedAt;
+        this.lastId = lastId;
         this.hasNext = hasNext;
         this.pageSize = pageSize;
         this.page = page;
