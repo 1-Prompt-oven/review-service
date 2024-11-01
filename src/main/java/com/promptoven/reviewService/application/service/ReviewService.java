@@ -4,16 +4,22 @@ import static com.promptoven.reviewService.global.common.response.BaseResponseSt
 
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
-import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
+import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
+import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
+import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
+import com.promptoven.reviewService.global.common.utils.CursorPage;
 import com.promptoven.reviewService.global.error.BaseException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewService implements ReviewUseCase {
@@ -24,38 +30,69 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void createReview(ReviewInPortDto reviewInPortDto) {
-        reviewRepositoryPort.save(reviewDtoMapper.toDto(reviewDomainService.createReview(reviewInPortDto)));
+
+        Review review = reviewDomainService.createReview(reviewInPortDto);
+        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
+
+        reviewRepositoryPort.save(reviewOutPortDto);
     }
 
     @Override
     public void updateReview(ReviewInPortDto reviewInPortDto) {
-        Optional<ReviewOutPortDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(
-                reviewInPortDto.getId());
 
-        if (reviewTransactionDto.isEmpty()) {
-            throw new BaseException(NO_EXIST_REVIEW);
-        }
+        ReviewOutPortDto reviewOutPortDto = reviewRepositoryPort.getReviewByReviewId(
+                reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
-        reviewRepositoryPort.update(
-                reviewDtoMapper.toDto(reviewDomainService.updateReview(reviewTransactionDto.get(), reviewInPortDto)));
+        Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+
+        reviewRepositoryPort.update(reviewOutPortDtoUpdated);
     }
 
     @Override
     public void deleteReview(Long reviewId) {
-        Optional<ReviewOutPortDto> reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId);
 
-        if (reviewTransactionDto.isEmpty()) {
-            throw new BaseException(NO_EXIST_REVIEW);
-        }
+        ReviewOutPortDto reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId).orElseThrow(
+                () -> new BaseException(NO_EXIST_REVIEW));
 
-        reviewRepositoryPort.delete(
-                reviewDtoMapper.toDto(reviewDomainService.deleteReview(reviewTransactionDto.get())));
+        Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+
+        reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
     }
 
     @Override
-    public List<ReviewInPortDto> getReview(String productUuid) {
-        return reviewDtoMapper.toDtoList(
-                reviewDomainService.getReview(reviewRepositoryPort.getReviewsByProductUuid(productUuid)));
+    public ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto) {
+
+        ReviewOutPaginationDto reviewOutPortDtoCursorPage = reviewRepositoryPort.getReviewByProductUuid(
+                reviewInPaginationDto);
+
+        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoCursorPage.getReviewOutPortDtoList());
+        List<ReviewInPortDto> reviewInPortDtoList = reviewDtoMapper.toDtoList(reviewList);
+
+        log.info("reviewOutPortDtoCursorPage: {}", reviewOutPortDtoCursorPage);
+
+        Boolean hasNext = reviewOutPortDtoCursorPage.getHasNext();
+        Long lastId = reviewOutPortDtoCursorPage.getLastId();
+        LocalDateTime lastCreatedAt = reviewOutPortDtoCursorPage.getLastCreatedAt();
+        Integer pageSize = reviewOutPortDtoCursorPage.getPageSize();
+        Integer page = reviewOutPortDtoCursorPage.getPage();
+
+        return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
     }
 
+//        return CursorPage.<ReviewInPortDto>builder()
+//                .content(reviewInPortDtoList)
+//                .lastId(reviewOutPortDtoCursorPage.getLastId())
+//                .lastCreatedAt(reviewOutPortDtoCursorPage.getLastCreatedAt())
+//                .hasNext(reviewOutPortDtoCursorPage.getHasNext())
+//                .page(reviewOutPortDtoCursorPage.getPage())
+//                .pageSize(reviewOutPortDtoCursorPage.getPageSize())
+//                .build();
+
+// body -> 숨겨야 하는 값
+    // pathvariable 필수
+    // requestparam 선택
+    // requestbody 그외
+    // url rest 원칙
 }

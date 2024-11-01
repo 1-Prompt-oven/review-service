@@ -1,8 +1,10 @@
 package com.promptoven.reviewService.application.mapper;
 
+import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -32,5 +34,17 @@ public class ReviewDtoMapper {
                 .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
                 .build()).toList();
+    }
+
+    public ReviewInPaginationDto toPaginationDto(List<ReviewInPortDto> reviewInPortDtoList,
+            Boolean hasNext, Long lastId, LocalDateTime lastCreatedAt, Integer pageSize, Integer page) {
+        return ReviewInPaginationDto.builder()
+                .reviewInPortDtoList(reviewInPortDtoList)
+                .hasNext(hasNext)
+                .lastId(lastId)
+                .lastCreatedAt(lastCreatedAt)
+                .pageSize(pageSize)
+                .page(page)
+                .build();
     }
 }

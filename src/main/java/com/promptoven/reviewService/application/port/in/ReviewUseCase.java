@@ -1,5 +1,6 @@
 package com.promptoven.reviewService.application.port.in;
 
+import com.promptoven.reviewService.global.common.utils.CursorPage;
 import java.util.List;
 
 public interface ReviewUseCase {
@@ -10,6 +11,6 @@ public interface ReviewUseCase {
 
     void deleteReview(Long reviewId);
 
-    List<ReviewInPortDto> getReview(String productUuid);
+    ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto);
 
 }

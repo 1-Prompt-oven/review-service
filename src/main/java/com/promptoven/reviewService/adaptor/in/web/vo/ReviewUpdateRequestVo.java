@@ -6,7 +6,6 @@ import lombok.Getter;
 public class ReviewUpdateRequestVo {
 
     private Long reviewId;
-    private String productUuid;
     private String contents;
     private int star;
 }
