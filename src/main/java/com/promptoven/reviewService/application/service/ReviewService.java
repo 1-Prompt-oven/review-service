@@ -85,8 +85,6 @@ public class ReviewService implements ReviewUseCase {
     @Override
     public void aggregateReviewData() {
         List<AggregateDto> aggregatedDataList = reviewRepositoryPort.aggregateReviewData();
-//        List<AggregateEntity> aggregateEntityList =
-
         reviewRepositoryPort.save(aggregatedDataList);
 
          log.info("Aggregated data: {}", aggregatedDataList);
