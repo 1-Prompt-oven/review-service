@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 public class AggregateDto {
     private String productUuid;
     private Long reviewCount;
-    private double avgStar;
+    private Double avgStar;
 
     @Builder
-    public AggregateDto(String productUuid, Long reviewCount, double avgStar) {
+    public AggregateDto(String productUuid, Long reviewCount, Double avgStar) {
         this.productUuid = productUuid;
         this.reviewCount = reviewCount;
         this.avgStar = avgStar;

@@ -2,7 +2,6 @@ package com.promptoven.reviewService.application.service;
 
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
-import com.promptoven.reviewService.adaptor.out.mysql.entity.AggregateEntity;
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;

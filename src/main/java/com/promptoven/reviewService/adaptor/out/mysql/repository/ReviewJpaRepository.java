@@ -11,10 +11,10 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
 
     Optional<ReviewEntity> findByReviewIdAndIsDeletedFalse(Long reviewId);
 
-    @Query("SELECT new com.promptoven.reviewService.application.port.out.AggregateDto(r.productUuid, COUNT(r), AVG(r.star)) " +
-            "FROM ReviewEntity r WHERE r.isDeleted = false GROUP BY r.productUuid")
-//@Query("SELECT new com.promptoven.reviewService.application.port.out.AggregateDto(p.productUuid, COALESCE(COUNT(r), 0), AVG(r.star)) " +
-//        "FROM AggregateEntity p LEFT JOIN ReviewEntity r ON p.productUuid = r.productUuid AND r.isDeleted = false " +
-//        "GROUP BY p.productUuid")
-List<AggregateDto> aggregateReviewData();
+    @Query("SELECT new com.promptoven.reviewService.application.port.out.AggregateDto(p.productUuid, " +
+            "COALESCE(CAST(COUNT(r) AS long), 0)," +
+            "COALESCE(CAST(AVG(r.star) AS double), 0.0)) " +
+            "FROM AggregateEntity p LEFT JOIN ReviewEntity r ON p.productUuid = r.productUuid AND r.isDeleted = false " +
+            "GROUP BY p.productUuid")
+    List<AggregateDto> aggregateReviewData();
 }

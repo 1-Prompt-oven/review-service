@@ -4,8 +4,8 @@ import com.promptoven.reviewService.adaptor.in.web.mapper.ReviewVoMapper;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewResponseVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.global.common.response.BaseResponse;
 import com.promptoven.reviewService.global.common.utils.CursorPage;
@@ -71,7 +71,7 @@ public class ReviewController {
         ReviewInPaginationDto reviewInPaginationDto = reviewVoMapper.toPaginationDto(productUuid, lastCreatedAt, lastId,
                 pageSize, page);
 
-        log.info("reviewPaginationDto: {}", reviewInPaginationDto.toString());
+
 
         ReviewInPaginationDto reviewResponsePaginationDto = reviewUseCase.getReview(reviewInPaginationDto);
 

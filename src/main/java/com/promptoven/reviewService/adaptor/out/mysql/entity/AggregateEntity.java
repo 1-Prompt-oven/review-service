@@ -9,9 +9,9 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@ToString
+
+
 @Entity
 @Table(name = "reviewAggregate")
 @Getter
@@ -28,10 +28,10 @@ public class AggregateEntity {
     private Long reviewCount;
 
     @Column(nullable = false)
-    private double avgStar;
+    private Double avgStar;
 
     @Builder
-    public AggregateEntity(Long id, String productUuid, Long reviewCount, double avgStar) {
+    public AggregateEntity(Long id, String productUuid, Long reviewCount, Double avgStar) {
         this.id = id;
         this.productUuid = productUuid;
         this.reviewCount = reviewCount;
