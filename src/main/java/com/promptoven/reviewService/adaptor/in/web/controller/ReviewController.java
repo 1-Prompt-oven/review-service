@@ -63,7 +63,7 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 조회 API", tags = {"리뷰"})
     @GetMapping
-    public BaseResponse<CursorPage<ReviewResponseVo>> getReview(@RequestParam(required = false) String productUuid,
+    public BaseResponse<CursorPage<ReviewResponseVo>> getReview(@RequestParam String productUuid,
             @RequestParam(required = false) LocalDateTime lastCreatedAt,
             @RequestParam(required = false) Long lastId, @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer page) {
@@ -76,6 +76,12 @@ public class ReviewController {
         ReviewInPaginationDto reviewResponsePaginationDto = reviewUseCase.getReview(reviewInPaginationDto);
 
         return new BaseResponse<>(reviewVoMapper.toCursorPage(reviewResponsePaginationDto));
+    }
+
+    @GetMapping("/aggregate")
+    public BaseResponse<Void> aggregateReviewData() {
+        reviewUseCase.aggregateReviewData();
+        return new BaseResponse<>();
     }
 
 }

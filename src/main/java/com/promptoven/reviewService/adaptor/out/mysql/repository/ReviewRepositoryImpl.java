@@ -1,18 +1,22 @@
 package com.promptoven.reviewService.adaptor.out.mysql.repository;
 
+import com.promptoven.reviewService.adaptor.out.mysql.entity.AggregateEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.entity.QReviewEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.mapper.ReviewEntityMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
+import com.promptoven.reviewService.application.port.out.AggregateDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
-import com.promptoven.reviewService.global.common.utils.CursorPage;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +27,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     private final ReviewJpaRepository reviewJpaRepository;
     private final ReviewEntityMapper reviewEntityMapper;
     private final JPAQueryFactory jpaQueryFactory;
+    private final ReviewAggregateJpaRepository reviewAggregateJpaRepository;
 
     private static final int DEFAULT_PAGE_SIZE = 20;
     private static final int DEFAULT_PAGE_NUMBER = 0;
@@ -45,13 +50,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     }
 
     @Override
-    public List<ReviewOutPortDto> getReviewsByProductUuid(String productUuid) {
-        return reviewJpaRepository.findByProductUuidAndIsDeletedFalse(productUuid).stream()
-                .map(reviewEntityMapper::toDto)
-                .toList();
-    }
-
-    @Override
     public void delete(ReviewOutPortDto reviewOutPortDto) {
         ReviewEntity reviewEntity = reviewEntityMapper.toDeleteEntity(reviewOutPortDto);
         reviewJpaRepository.save(reviewEntity);
@@ -65,13 +63,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
         Long lastId = reviewInPaginationDto.getLastId();
         Integer pageSize = reviewInPaginationDto.getPageSize();
         Integer page = reviewInPaginationDto.getPage();
-
-        System.out.println("productUuid = " + productUuid);
-        System.out.println("lastCreatedAt = " + lastCreatedAt);
-        System.out.println("lastId = " + lastId);
-        System.out.println("pageSize = " + pageSize);
-        System.out.println("page = " + page);
-
 
         QReviewEntity reviewList = QReviewEntity.reviewEntity;
         BooleanBuilder builder = new BooleanBuilder();
@@ -119,9 +110,41 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
                 .page(Optional.ofNullable(page).orElse(DEFAULT_PAGE_NUMBER))
                 .pageSize(currentPageSize)
                 .build();
-
-//        return new CursorPage<>(reviewOutPortDtoList, nextReviewId, nextCreatedAt, hasNext, currentPageSize,
-//                Optional.ofNullable(page).orElse(DEFAULT_PAGE_NUMBER));
     }
+
+    @Override
+    public void save(List<AggregateDto> aggregateDtoList) {
+        List<AggregateEntity> existEntityList = reviewAggregateJpaRepository.findAllByProductUuidIn(
+                aggregateDtoList.stream().map(AggregateDto::getProductUuid).toList());
+
+        Map<String, AggregateEntity> existingEntityMap = existEntityList.stream()
+                .collect(Collectors.toMap(AggregateEntity::getProductUuid, entity -> entity));
+
+        List<AggregateEntity> toSaveData = new ArrayList<>();
+
+        for (AggregateDto aggregateDto : aggregateDtoList) {
+            AggregateEntity existingEntity = existingEntityMap.get(aggregateDto.getProductUuid());
+            if (existingEntity != null) {
+                existingEntity = AggregateEntity.builder()
+                        .id(existingEntity.getId())
+                        .productUuid(existingEntity.getProductUuid())
+                        .avgStar(aggregateDto.getAvgStar())
+                        .reviewCount(aggregateDto.getReviewCount())
+                        .build();
+            } else {
+                existingEntity = reviewEntityMapper.toAggregateEntity(aggregateDto);
+            }
+
+            toSaveData.add(existingEntity);
+        }
+        reviewAggregateJpaRepository.saveAll(toSaveData);
+    }
+
+    @Override
+    public List<AggregateDto> aggregateReviewData() {
+        return reviewJpaRepository.aggregateReviewData();
+    }
+
+
 }
 
