@@ -70,8 +70,6 @@ public class ReviewService implements ReviewUseCase {
         List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoCursorPage.getReviewOutPortDtoList());
         List<ReviewInPortDto> reviewInPortDtoList = reviewDtoMapper.toDtoList(reviewList);
 
-        log.info("reviewOutPortDtoCursorPage: {}", reviewOutPortDtoCursorPage);
-
         Boolean hasNext = reviewOutPortDtoCursorPage.getHasNext();
         Long lastId = reviewOutPortDtoCursorPage.getLastId();
         LocalDateTime lastCreatedAt = reviewOutPortDtoCursorPage.getLastCreatedAt();
@@ -86,6 +84,5 @@ public class ReviewService implements ReviewUseCase {
         List<AggregateDto> aggregatedDataList = reviewRepositoryPort.aggregateReviewData();
         reviewRepositoryPort.save(aggregatedDataList);
 
-         log.info("Aggregated data: {}", aggregatedDataList);
     }
 }

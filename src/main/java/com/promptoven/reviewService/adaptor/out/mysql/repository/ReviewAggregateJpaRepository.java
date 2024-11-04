@@ -5,5 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewAggregateJpaRepository extends JpaRepository<AggregateEntity, Long> {
+
     List<AggregateEntity> findAllByProductUuidIn(List<String> productUuids);
 }

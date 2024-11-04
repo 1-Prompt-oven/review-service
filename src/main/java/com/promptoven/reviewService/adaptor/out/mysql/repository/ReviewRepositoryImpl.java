@@ -13,12 +13,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -128,14 +125,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
 
         Map<String, AggregateEntity> existingEntityMap = existEntityList.stream()
                 .collect(Collectors.toMap(AggregateEntity::getProductUuid, entity -> entity));
-
-//        Map<String, AggregateEntity> existingEntityMap = new HashMap<>();
-//        existEntityList
-//                .forEach(
-//                        entity ->
-//                                existingEntityMap.put(entity.getProductUuid(), entity));
-
-        log.info("existingEntityMap: {}", existingEntityMap);
 
         List<AggregateEntity> toSaveData = new ArrayList<>();
 

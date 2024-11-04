@@ -11,12 +11,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 @Entity
 @Table(name = "reviewAggregate")
 @Getter
 @NoArgsConstructor
 public class AggregateEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
