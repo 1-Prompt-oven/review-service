@@ -7,6 +7,7 @@ import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.AggregateDto;
+import com.promptoven.reviewService.application.port.out.MessagePort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
@@ -17,6 +18,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.aspectj.bridge.Message;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -27,6 +33,7 @@ public class ReviewService implements ReviewUseCase {
     private final ReviewRepositoryPort reviewRepositoryPort;
     private final ReviewDomainService reviewDomainService;
     private final ReviewDtoMapper reviewDtoMapper;
+    private final MessagePort messagePort;
 
     @Override
     public void createReview(ReviewInPortDto reviewInPortDto) {
@@ -80,9 +87,9 @@ public class ReviewService implements ReviewUseCase {
     }
 
     @Override
+    @Scheduled(fixedRate = 30000)
     public void aggregateReviewData() {
-        List<AggregateDto> aggregatedDataList = reviewRepositoryPort.aggregateReviewData();
-        reviewRepositoryPort.save(aggregatedDataList);
-
+        messagePort.updateReviewAggregate();
     }
+
 }

@@ -14,4 +14,5 @@ public interface ReviewUseCase {
     ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto);
 
     void aggregateReviewData();
+
 }

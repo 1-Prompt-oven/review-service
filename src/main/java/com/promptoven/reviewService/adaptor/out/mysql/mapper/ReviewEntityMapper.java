@@ -60,19 +60,4 @@ public class ReviewEntityMapper {
         return reviewEntity.map(this::toDto);
     }
 
-    public List<AggregateEntity> toAggregateEntityList(List<AggregateDto> aggregateDtoList) {
-        return aggregateDtoList.stream().map(aggregate -> AggregateEntity.builder()
-                .productUuid(aggregate.getProductUuid())
-                .reviewCount(aggregate.getReviewCount())
-                .avgStar(aggregate.getAvgStar())
-                .build()).toList();
-    }
-
-    public AggregateEntity toAggregateEntity(AggregateDto aggregateDto) {
-        return AggregateEntity.builder()
-                .productUuid(aggregateDto.getProductUuid())
-                .reviewCount(aggregateDto.getReviewCount())
-                .avgStar(aggregateDto.getAvgStar())
-                .build();
-    }
 }
