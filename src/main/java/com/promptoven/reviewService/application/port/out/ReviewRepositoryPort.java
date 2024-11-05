@@ -1,7 +1,7 @@
 package com.promptoven.reviewService.application.port.out;
 
+import com.promptoven.reviewService.adaptor.out.mysql.entity.AggregateEntity;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
-import com.promptoven.reviewService.global.common.utils.CursorPage;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,13 +13,14 @@ public interface ReviewRepositoryPort {
 
     void delete(ReviewOutPortDto reviewOutPortDto);
 
+    void save(List<AggregateDto> aggregateDto);
+
     Optional<ReviewOutPortDto> getReviewByReviewId(Long reviewId);
 
-    List<ReviewOutPortDto> getReviewsByProductUuid(String productUuid);
-
-    // CursorPage<ReviewOutPortDto> getReviewByProductUuid(String productUuid, Long lastId, Integer pageSize, Integer page);
-
     ReviewOutPaginationDto getReviewByProductUuid(ReviewInPaginationDto reviewInPaginationDto);
+
+    List<AggregateDto> aggregateReviewData();
+
 }
 
 

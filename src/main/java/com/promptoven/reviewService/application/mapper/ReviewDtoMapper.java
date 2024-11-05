@@ -1,7 +1,9 @@
 package com.promptoven.reviewService.application.mapper;
 
+import com.promptoven.reviewService.adaptor.out.mysql.entity.AggregateEntity;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.out.AggregateDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
 import java.time.LocalDateTime;
@@ -47,4 +49,6 @@ public class ReviewDtoMapper {
                 .page(page)
                 .build();
     }
+
+
 }

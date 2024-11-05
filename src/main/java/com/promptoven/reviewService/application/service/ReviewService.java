@@ -3,15 +3,15 @@ package com.promptoven.reviewService.application.service;
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
+import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
+import com.promptoven.reviewService.application.port.out.AggregateDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
-import com.promptoven.reviewService.global.common.utils.CursorPage;
 import com.promptoven.reviewService.global.error.BaseException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,8 +70,6 @@ public class ReviewService implements ReviewUseCase {
         List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoCursorPage.getReviewOutPortDtoList());
         List<ReviewInPortDto> reviewInPortDtoList = reviewDtoMapper.toDtoList(reviewList);
 
-        log.info("reviewOutPortDtoCursorPage: {}", reviewOutPortDtoCursorPage);
-
         Boolean hasNext = reviewOutPortDtoCursorPage.getHasNext();
         Long lastId = reviewOutPortDtoCursorPage.getLastId();
         LocalDateTime lastCreatedAt = reviewOutPortDtoCursorPage.getLastCreatedAt();
@@ -81,18 +79,10 @@ public class ReviewService implements ReviewUseCase {
         return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
     }
 
-//        return CursorPage.<ReviewInPortDto>builder()
-//                .content(reviewInPortDtoList)
-//                .lastId(reviewOutPortDtoCursorPage.getLastId())
-//                .lastCreatedAt(reviewOutPortDtoCursorPage.getLastCreatedAt())
-//                .hasNext(reviewOutPortDtoCursorPage.getHasNext())
-//                .page(reviewOutPortDtoCursorPage.getPage())
-//                .pageSize(reviewOutPortDtoCursorPage.getPageSize())
-//                .build();
+    @Override
+    public void aggregateReviewData() {
+        List<AggregateDto> aggregatedDataList = reviewRepositoryPort.aggregateReviewData();
+        reviewRepositoryPort.save(aggregatedDataList);
 
-// body -> 숨겨야 하는 값
-    // pathvariable 필수
-    // requestparam 선택
-    // requestbody 그외
-    // url rest 원칙
+    }
 }
