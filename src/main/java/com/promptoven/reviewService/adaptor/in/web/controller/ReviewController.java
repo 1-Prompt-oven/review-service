@@ -71,8 +71,6 @@ public class ReviewController {
         ReviewInPaginationDto reviewInPaginationDto = reviewVoMapper.toPaginationDto(productUuid, lastCreatedAt, lastId,
                 pageSize, page);
 
-
-
         ReviewInPaginationDto reviewResponsePaginationDto = reviewUseCase.getReview(reviewInPaginationDto);
 
         return new BaseResponse<>(reviewVoMapper.toCursorPage(reviewResponsePaginationDto));
@@ -83,5 +81,4 @@ public class ReviewController {
         reviewUseCase.aggregateReviewData();
         return new BaseResponse<>();
     }
-
 }

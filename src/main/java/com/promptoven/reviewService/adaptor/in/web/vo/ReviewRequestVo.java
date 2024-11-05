@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class ReviewRequestVo {
 
+    // member name
     private String productUuid;
     private String memberUuid;
     private int star;

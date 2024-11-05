@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "reviewAggregate")
+@Table(name = "review_aggregate")
 @Getter
 @NoArgsConstructor
 public class AggregateEntity {
