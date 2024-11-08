@@ -1,6 +1,5 @@
 package com.promptoven.reviewService.application.port.out;
 
-import jdk.jfr.Name;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,15 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class AggregateDto {
+public class MessageDto {
     private String productUuid;
-    private Long reviewCount;
-    private Double avgStar;
+    private int star;
+    private int previousStar;
 
     @Builder
-    public AggregateDto(String productUuid, Long reviewCount, Double avgStar) {
+    public MessageDto(String productUuid, int star, int previousStar) {
         this.productUuid = productUuid;
-        this.reviewCount = reviewCount;
-        this.avgStar = avgStar;
+        this.star = star;
+        this.previousStar = previousStar;
     }
 }

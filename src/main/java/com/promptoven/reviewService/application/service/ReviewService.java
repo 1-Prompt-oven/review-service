@@ -6,7 +6,7 @@ import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
-import com.promptoven.reviewService.application.port.out.AggregateDto;
+import com.promptoven.reviewService.application.port.out.MessageDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
@@ -18,10 +18,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.aspectj.bridge.Message;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +35,14 @@ public class ReviewService implements ReviewUseCase {
     public void createReview(ReviewInPortDto reviewInPortDto) {
 
         Review review = reviewDomainService.createReview(reviewInPortDto);
+
         ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.save(reviewOutPortDto);
+
+        MessageDto messageDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
+
+        messagePort.createReviewMessage(messageDto);
     }
 
     @Override
@@ -51,9 +52,14 @@ public class ReviewService implements ReviewUseCase {
                 reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
         Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.update(reviewOutPortDtoUpdated);
+
+        MessageDto messageDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
+
+        messagePort.updateReviewMessage(messageDto);
     }
 
     @Override
@@ -63,9 +69,15 @@ public class ReviewService implements ReviewUseCase {
                 () -> new BaseException(NO_EXIST_REVIEW));
 
         Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
+
+        // 삭제 -> DTO에 productUuid와 별점 존재
+        MessageDto messageDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
+
+        messagePort.deleteReviewMessage(messageDto);
     }
 
     @Override
@@ -84,12 +96,6 @@ public class ReviewService implements ReviewUseCase {
         Integer page = reviewOutPortDtoCursorPage.getPage();
 
         return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
-    }
-
-    @Override
-    @Scheduled(fixedRate = 30000)
-    public void aggregateReviewData() {
-        messagePort.updateReviewAggregate();
     }
 
 }

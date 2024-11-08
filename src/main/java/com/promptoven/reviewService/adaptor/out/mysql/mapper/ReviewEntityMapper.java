@@ -1,10 +1,7 @@
 package com.promptoven.reviewService.adaptor.out.mysql.mapper;
 
-import com.promptoven.reviewService.adaptor.out.mysql.entity.AggregateEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
-import com.promptoven.reviewService.application.port.out.AggregateDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
