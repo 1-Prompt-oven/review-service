@@ -13,14 +13,9 @@ public interface ReviewRepositoryPort {
 
     void delete(ReviewOutPortDto reviewOutPortDto);
 
-    void save(List<AggregateDto> aggregateDto);
-
     Optional<ReviewOutPortDto> getReviewByReviewId(Long reviewId);
 
     ReviewOutPaginationDto getReviewByProductUuid(ReviewInPaginationDto reviewInPaginationDto);
-
-    List<AggregateDto> aggregateReviewData();
-
 }
 
 

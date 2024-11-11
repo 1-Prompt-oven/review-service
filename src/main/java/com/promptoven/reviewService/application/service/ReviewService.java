@@ -6,7 +6,8 @@ import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
-import com.promptoven.reviewService.application.port.out.AggregateDto;
+import com.promptoven.reviewService.application.port.out.MessageOutDto;
+import com.promptoven.reviewService.application.port.out.MessagePort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
@@ -27,14 +28,20 @@ public class ReviewService implements ReviewUseCase {
     private final ReviewRepositoryPort reviewRepositoryPort;
     private final ReviewDomainService reviewDomainService;
     private final ReviewDtoMapper reviewDtoMapper;
+    private final MessagePort messagePort;
 
     @Override
     public void createReview(ReviewInPortDto reviewInPortDto) {
 
         Review review = reviewDomainService.createReview(reviewInPortDto);
+
         ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.save(reviewOutPortDto);
+
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
+
+        messagePort.createReviewMessage(messageOutDto);
     }
 
     @Override
@@ -44,9 +51,15 @@ public class ReviewService implements ReviewUseCase {
                 reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
         Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.update(reviewOutPortDtoUpdated);
+
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated,
+                reviewOutPortDto.getStar());
+
+        messagePort.updateReviewMessage(messageOutDto);
     }
 
     @Override
@@ -56,9 +69,14 @@ public class ReviewService implements ReviewUseCase {
                 () -> new BaseException(NO_EXIST_REVIEW));
 
         Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
         reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
+
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
+
+        messagePort.deleteReviewMessage(messageOutDto);
     }
 
     @Override
@@ -79,10 +97,4 @@ public class ReviewService implements ReviewUseCase {
         return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
     }
 
-    @Override
-    public void aggregateReviewData() {
-        List<AggregateDto> aggregatedDataList = reviewRepositoryPort.aggregateReviewData();
-        reviewRepositoryPort.save(aggregatedDataList);
-
-    }
 }

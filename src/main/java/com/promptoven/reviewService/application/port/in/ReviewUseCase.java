@@ -1,8 +1,5 @@
 package com.promptoven.reviewService.application.port.in;
 
-import com.promptoven.reviewService.global.common.utils.CursorPage;
-import java.util.List;
-
 public interface ReviewUseCase {
 
     void createReview(ReviewInPortDto reviewInPortDto);
@@ -13,5 +10,4 @@ public interface ReviewUseCase {
 
     ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto);
 
-    void aggregateReviewData();
 }

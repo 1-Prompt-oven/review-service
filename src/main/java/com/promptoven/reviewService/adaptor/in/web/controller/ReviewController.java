@@ -75,10 +75,4 @@ public class ReviewController {
 
         return new BaseResponse<>(reviewVoMapper.toCursorPage(reviewResponsePaginationDto));
     }
-
-    @GetMapping("/aggregate")
-    public BaseResponse<Void> aggregateReviewData() {
-        reviewUseCase.aggregateReviewData();
-        return new BaseResponse<>();
-    }
 }
