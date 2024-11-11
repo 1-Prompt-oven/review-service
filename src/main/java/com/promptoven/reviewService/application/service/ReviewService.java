@@ -6,7 +6,7 @@ import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
-import com.promptoven.reviewService.application.port.out.MessageDto;
+import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
 import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -40,9 +39,9 @@ public class ReviewService implements ReviewUseCase {
 
         reviewRepositoryPort.save(reviewOutPortDto);
 
-        MessageDto messageDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
 
-        messagePort.createReviewMessage(messageDto);
+        messagePort.createReviewMessage(messageOutDto);
     }
 
     @Override
@@ -57,9 +56,10 @@ public class ReviewService implements ReviewUseCase {
 
         reviewRepositoryPort.update(reviewOutPortDtoUpdated);
 
-        MessageDto messageDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated,
+                reviewOutPortDto.getStar());
 
-        messagePort.updateReviewMessage(messageDto);
+        messagePort.updateReviewMessage(messageOutDto);
     }
 
     @Override
@@ -74,10 +74,9 @@ public class ReviewService implements ReviewUseCase {
 
         reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
 
-        // 삭제 -> DTO에 productUuid와 별점 존재
-        MessageDto messageDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
 
-        messagePort.deleteReviewMessage(messageDto);
+        messagePort.deleteReviewMessage(messageOutDto);
     }
 
     @Override

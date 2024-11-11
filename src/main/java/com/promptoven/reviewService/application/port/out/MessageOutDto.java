@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class MessageDto {
+public class MessageOutDto {
+
     private String productUuid;
     private int star;
     private int previousStar;
 
     @Builder
-    public MessageDto(String productUuid, int star, int previousStar) {
+    public MessageOutDto(String productUuid, int star, int previousStar) {
         this.productUuid = productUuid;
         this.star = star;
         this.previousStar = previousStar;
