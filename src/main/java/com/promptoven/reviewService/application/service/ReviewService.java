@@ -2,20 +2,17 @@ package com.promptoven.reviewService.application.service;
 
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
+import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
-import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import com.promptoven.reviewService.global.error.BaseException;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,9 +34,11 @@ public class ReviewService implements ReviewUseCase {
 
         ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
 
-        reviewRepositoryPort.save(reviewOutPortDto);
+        ReviewEntity reviewEntity = reviewRepositoryPort.save(reviewOutPortDto);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
+        log.info("reviewEntity: {}", reviewEntity.getReviewId());
+
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewEntity.getReviewId(), reviewOutPortDto);
 
         messagePort.createReviewMessage(messageOutDto);
     }
@@ -54,10 +53,10 @@ public class ReviewService implements ReviewUseCase {
 
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
-        reviewRepositoryPort.update(reviewOutPortDtoUpdated);
+        ReviewEntity reviewEntity = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated,
-                reviewOutPortDto.getStar());
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewEntity.getReviewId(),
+                reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
 
         messagePort.updateReviewMessage(messageOutDto);
     }
@@ -72,29 +71,10 @@ public class ReviewService implements ReviewUseCase {
 
         ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
 
-        reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
+        ReviewEntity reviewEntity = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewEntity.getReviewId(), reviewOutPortDtoUpdated);
 
         messagePort.deleteReviewMessage(messageOutDto);
     }
-
-    @Override
-    public ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto) {
-
-        ReviewOutPaginationDto reviewOutPortDtoCursorPage = reviewRepositoryPort.getReviewByProductUuid(
-                reviewInPaginationDto);
-
-        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoCursorPage.getReviewOutPortDtoList());
-        List<ReviewInPortDto> reviewInPortDtoList = reviewDtoMapper.toDtoList(reviewList);
-
-        Boolean hasNext = reviewOutPortDtoCursorPage.getHasNext();
-        Long lastId = reviewOutPortDtoCursorPage.getLastId();
-        LocalDateTime lastCreatedAt = reviewOutPortDtoCursorPage.getLastCreatedAt();
-        Integer pageSize = reviewOutPortDtoCursorPage.getPageSize();
-        Integer page = reviewOutPortDtoCursorPage.getPage();
-
-        return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
-    }
-
 }
