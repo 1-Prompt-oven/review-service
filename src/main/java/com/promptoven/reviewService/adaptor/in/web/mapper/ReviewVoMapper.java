@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewVoMapper {
 
-    public ReviewInPortDto toDto(ReviewRequestVo reviewRequestVo) {
+    public ReviewInPortDto toInPortDtoDto(ReviewRequestVo reviewRequestVo) {
         return ReviewInPortDto.builder()
                 .productUuid(reviewRequestVo.getProductUuid())
                 .memberUuid(reviewRequestVo.getMemberUuid())
+                .memberProfileImage(reviewRequestVo.getMemberProfileImage())
+                .memberNickname(reviewRequestVo.getMemberNickname())
                 .star(reviewRequestVo.getStar())
                 .contents(reviewRequestVo.getContents())
                 .build();

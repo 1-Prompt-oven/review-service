@@ -1,17 +1,20 @@
 package com.promptoven.reviewService.application.port.out;
 
 import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepositoryPort {
 
-    ReviewEntity save(ReviewOutPortDto reviewOutPortDto);
+    ReviewOutPortDto save(ReviewOutPortDto reviewOutPortDto);
 
-    ReviewEntity update(ReviewOutPortDto reviewOutPortDto);
+    ReviewOutPortDto update(ReviewOutPortDto reviewOutPortDto);
 
-    ReviewEntity delete(ReviewOutPortDto reviewOutPortDto);
+    ReviewOutPortDto delete(ReviewOutPortDto reviewOutPortDto);
 
     Optional<ReviewOutPortDto> getReviewByReviewId(Long reviewId);
+
+    List<ReviewOutPortDto> getReviewListByMemberUuid(String memberUuid);
 
 }
 

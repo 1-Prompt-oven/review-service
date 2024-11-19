@@ -4,7 +4,9 @@ import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.adaptor.out.mysql.mapper.ReviewEntityMapper;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
+import com.promptoven.reviewService.domain.model.Review;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +25,15 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     private static final int DEFAULT_PAGE_NUMBER = 0;
 
     @Override
-    public ReviewEntity save(ReviewOutPortDto reviewOutPortDto) {
+    public ReviewOutPortDto save(ReviewOutPortDto reviewOutPortDto) {
         ReviewEntity reviewEntity = reviewEntityMapper.toEntity(reviewOutPortDto);
-        return reviewJpaRepository.save(reviewEntity);
+        return reviewEntityMapper.toDto(reviewJpaRepository.save(reviewEntity));
     }
 
     @Override
-    public ReviewEntity update(ReviewOutPortDto reviewOutPortDto) {
+    public ReviewOutPortDto update(ReviewOutPortDto reviewOutPortDto) {
         ReviewEntity reviewEntity = reviewEntityMapper.toUpdateEntity(reviewOutPortDto);
-        return reviewJpaRepository.save(reviewEntity);
+        return reviewEntityMapper.toDto(reviewJpaRepository.save(reviewEntity));
     }
 
     @Override
@@ -40,9 +42,16 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     }
 
     @Override
-    public ReviewEntity delete(ReviewOutPortDto reviewOutPortDto) {
+    public List<ReviewOutPortDto> getReviewListByMemberUuid(String memberUuid) {
+        return reviewJpaRepository.findAllByMemberUuid(memberUuid).stream()
+                .map(reviewEntityMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public ReviewOutPortDto delete(ReviewOutPortDto reviewOutPortDto) {
         ReviewEntity reviewEntity = reviewEntityMapper.toDeleteEntity(reviewOutPortDto);
-        return reviewJpaRepository.save(reviewEntity);
+        return reviewEntityMapper.toDto(reviewJpaRepository.save(reviewEntity));
     }
 }
 

@@ -30,7 +30,8 @@ public class ReviewController {
     @PostMapping
     public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
 
-        ReviewInPortDto reviewInPortDto = reviewVoMapper.toDto(reviewRequestVo);
+        ReviewInPortDto reviewInPortDto = reviewVoMapper.toInPortDtoDto(reviewRequestVo);
+
         reviewUseCase.createReview(reviewInPortDto);
 
         return new BaseResponse<>();
@@ -41,6 +42,7 @@ public class ReviewController {
     public BaseResponse<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
 
         ReviewInPortDto reviewInPortDto = reviewVoMapper.toUpdateDto(reviewRequestVo);
+
         reviewUseCase.updateReview(reviewInPortDto);
 
         return new BaseResponse<>();

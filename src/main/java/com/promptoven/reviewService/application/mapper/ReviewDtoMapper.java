@@ -1,22 +1,20 @@
 package com.promptoven.reviewService.application.mapper;
 
-import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewDtoMapper {
 
-    public ReviewOutPortDto toDto(Review review) {
+    public ReviewOutPortDto toOutPortDto(Review review) {
         return ReviewOutPortDto.builder()
                 .id(review.getId())
                 .productUuid(review.getProductUuid())
                 .memberUuid(review.getMemberUuid())
+                .memberProfileImage(review.getMemberProfileImage())
+                .memberNickname(review.getMemberNickname())
                 .star(review.getStar())
                 .contents(review.getContents())
                 .isDeleted(review.getIsDeleted())
@@ -30,6 +28,8 @@ public class ReviewDtoMapper {
                 .reviewId(reviewId)
                 .productUuid(reviewOutPortDto.getProductUuid())
                 .memberUuid(reviewOutPortDto.getMemberUuid())
+                .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
+                .memberNickname(reviewOutPortDto.getMemberNickname())
                 .contents(reviewOutPortDto.getContents())
                 .isDeleted(reviewOutPortDto.getIsDeleted())
                 .star(reviewOutPortDto.getStar())
@@ -45,5 +45,4 @@ public class ReviewDtoMapper {
                 .previousStar(previousStar)
                 .build();
     }
-
 }

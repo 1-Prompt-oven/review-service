@@ -13,6 +13,7 @@ import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import com.promptoven.reviewService.global.error.BaseException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,13 +33,11 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.createReview(reviewInPortDto);
 
-        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toOutPortDto(review);
 
-        ReviewEntity reviewEntity = reviewRepositoryPort.save(reviewOutPortDto);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.save(reviewOutPortDto);
 
-        log.info("reviewEntity: {}", reviewEntity.getReviewId());
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewEntity.getReviewId(), reviewOutPortDto);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDto);
 
         messagePort.createReviewMessage(messageOutDto);
     }
@@ -51,11 +50,11 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
 
-        ReviewEntity reviewEntity = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewEntity.getReviewId(),
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(savedReviewData.getId(),
                 reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
 
         messagePort.updateReviewMessage(messageOutDto);
@@ -69,12 +68,28 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.deleteReview(reviewTransactionDto);
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
 
-        ReviewEntity reviewEntity = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewEntity.getReviewId(), reviewOutPortDtoUpdated);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDtoUpdated);
 
         messagePort.deleteReviewMessage(messageOutDto);
     }
+
+    @Override
+    public void updateMemberData(ReviewInPortDto reviewInPortDto) {
+        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(reviewInPortDto.getMemberUuid());
+
+        for (ReviewOutPortDto reviewOutPortDto : reviewOutPortDtoList) {
+
+            Review updatedReview = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+
+            ReviewOutPortDto updatedReviewOutPortDto = reviewDtoMapper.toOutPortDto(updatedReview);
+
+            reviewRepositoryPort.update(updatedReviewOutPortDto);
+        }
+
+    }
+
 }
