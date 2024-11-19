@@ -2,7 +2,6 @@ package com.promptoven.reviewService.application.service;
 
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
-import com.promptoven.reviewService.adaptor.out.mysql.entity.ReviewEntity;
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
@@ -78,16 +77,24 @@ public class ReviewService implements ReviewUseCase {
     }
 
     @Override
-    public void updateMemberData(ReviewInPortDto reviewInPortDto) {
-        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(reviewInPortDto.getMemberUuid());
+    public void updateMemberData(ReviewInPortDto updateMemberDataDto) {
+        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(updateMemberDataDto.getMemberUuid());
 
         for (ReviewOutPortDto reviewOutPortDto : reviewOutPortDtoList) {
 
-            Review updatedReview = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+            Review updatedReview = reviewDomainService.updateReview(reviewOutPortDto, updateMemberDataDto);
 
             ReviewOutPortDto updatedReviewOutPortDto = reviewDtoMapper.toOutPortDto(updatedReview);
 
             reviewRepositoryPort.update(updatedReviewOutPortDto);
+        }
+
+        if(null == updateMemberDataDto.getMemberNickname()) {
+            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateImageDto(updateMemberDataDto));
+        }
+
+        else if (null == updateMemberDataDto.getMemberProfileImage()) {
+            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateNicknameDto(updateMemberDataDto));
         }
 
     }

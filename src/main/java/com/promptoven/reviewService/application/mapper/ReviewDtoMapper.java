@@ -1,5 +1,6 @@
 package com.promptoven.reviewService.application.mapper;
 
+import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
@@ -43,6 +44,20 @@ public class ReviewDtoMapper {
                 .contents(reviewOutPortDto.getContents())
                 .star(reviewOutPortDto.getStar())
                 .previousStar(previousStar)
+                .build();
+    }
+
+    public MessageOutDto toUpdateNicknameDto(ReviewInPortDto reviewInPortDto) {
+        return MessageOutDto.builder()
+                .memberUuid(reviewInPortDto.getMemberUuid())
+                .memberNickname(reviewInPortDto.getMemberNickname())
+                .build();
+    }
+
+    public MessageOutDto toUpdateImageDto(ReviewInPortDto reviewInPortDto) {
+        return MessageOutDto.builder()
+                .memberUuid(reviewInPortDto.getMemberUuid())
+                .memberProfileImage(reviewInPortDto.getMemberProfileImage())
                 .build();
     }
 }

@@ -8,5 +8,5 @@ public interface ReviewUseCase {
 
     void deleteReview(Long reviewId);
 
-    void updateMemberData(ReviewInPortDto reviewInPortDto);
+    void updateMemberData(ReviewInPortDto updateMemberDataDto);
 }
