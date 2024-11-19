@@ -3,7 +3,6 @@ package com.promptoven.reviewService.domain.service;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
-import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +12,8 @@ public class ReviewDomainService {
         return Review.builder()
                 .productUuid(reviewInPortDto.getProductUuid())
                 .memberUuid(reviewInPortDto.getMemberUuid())
+                .memberProfileImage(reviewInPortDto.getMemberProfileImage())
+                .memberNickname(reviewInPortDto.getMemberNickname())
                 .star(reviewInPortDto.getStar())
                 .contents(reviewInPortDto.getContents())
                 .isDeleted(false)
@@ -24,8 +25,14 @@ public class ReviewDomainService {
                 .id(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
                 .memberUuid(reviewOutPortDto.getMemberUuid())
-                .star(reviewInPortDto.getStar())
-                .contents(reviewInPortDto.getContents())
+                .memberProfileImage(
+                        reviewInPortDto.getMemberProfileImage() != null ? reviewInPortDto.getMemberProfileImage()
+                                : reviewOutPortDto.getMemberProfileImage())
+                .memberNickname(reviewInPortDto.getMemberNickname() != null ? reviewInPortDto.getMemberNickname()
+                        : reviewOutPortDto.getMemberNickname())
+                .star(reviewInPortDto.getStar() != 0 ? reviewInPortDto.getStar() : reviewOutPortDto.getStar())
+                .contents(reviewInPortDto.getContents() != null ? reviewInPortDto.getContents()
+                        : reviewOutPortDto.getContents())
                 .isDeleted(reviewOutPortDto.getIsDeleted())
                 .build();
     }
@@ -35,21 +42,12 @@ public class ReviewDomainService {
                 .id(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
                 .memberUuid(reviewOutPortDto.getMemberUuid())
+                .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
+                .memberNickname(reviewOutPortDto.getMemberNickname())
                 .star(reviewOutPortDto.getStar())
                 .contents(reviewOutPortDto.getContents())
                 .isDeleted(true)
                 .build();
     }
 
-    public List<Review> getReview(List<ReviewOutPortDto> reviewOutPortDtoList) {
-        return reviewOutPortDtoList.stream().map(reviewOutPortDto -> Review.builder()
-                .id(reviewOutPortDto.getId())
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
-                .star(reviewOutPortDto.getStar())
-                .contents(reviewOutPortDto.getContents())
-                .createdAt(reviewOutPortDto.getCreatedAt())
-                .updatedAt(reviewOutPortDto.getUpdatedAt())
-                .build()).toList();
-    }
 }

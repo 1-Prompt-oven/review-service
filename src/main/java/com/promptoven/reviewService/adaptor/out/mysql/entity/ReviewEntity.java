@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "review")
@@ -28,6 +29,12 @@ public class ReviewEntity extends BaseEntity {
     private String memberUuid;
 
     @Column(nullable = false)
+    private String memberProfileImage;
+
+    @Column(nullable = false)
+    private String memberNickname;
+
+    @Column(nullable = false)
     private int star;
 
     @Column(nullable = false)
@@ -37,11 +44,13 @@ public class ReviewEntity extends BaseEntity {
     private Boolean isDeleted;
 
     @Builder
-    public ReviewEntity(Long reviewId, String productUuid, String memberUuid, int star, String contents,
-            Boolean isDeleted) {
+    public ReviewEntity(Long reviewId, String productUuid, String memberUuid, String memberProfileImage,
+            String memberNickname, int star, String contents, Boolean isDeleted) {
         this.reviewId = reviewId;
         this.productUuid = productUuid;
         this.memberUuid = memberUuid;
+        this.memberProfileImage = memberProfileImage;
+        this.memberNickname = memberNickname;
         this.star = star;
         this.contents = contents;
         this.isDeleted = isDeleted;

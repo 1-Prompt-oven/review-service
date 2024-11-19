@@ -3,18 +3,15 @@ package com.promptoven.reviewService.application.service;
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPaginationDto;
 import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
-import com.promptoven.reviewService.application.port.out.ReviewOutPaginationDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
 import com.promptoven.reviewService.domain.model.Review;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import com.promptoven.reviewService.global.error.BaseException;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +32,11 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.createReview(reviewInPortDto);
 
-        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toOutPortDto(review);
 
-        reviewRepositoryPort.save(reviewOutPortDto);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.save(reviewOutPortDto);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDto);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDto);
 
         messagePort.createReviewMessage(messageOutDto);
     }
@@ -52,12 +49,12 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
 
-        reviewRepositoryPort.update(reviewOutPortDtoUpdated);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated,
-                reviewOutPortDto.getStar());
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(savedReviewData.getId(),
+                reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
 
         messagePort.updateReviewMessage(messageOutDto);
     }
@@ -70,31 +67,36 @@ public class ReviewService implements ReviewUseCase {
 
         Review review = reviewDomainService.deleteReview(reviewTransactionDto);
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toDto(review);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
 
-        reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
+        ReviewOutPortDto savedReviewData = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
 
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(reviewOutPortDtoUpdated);
+        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDtoUpdated);
 
         messagePort.deleteReviewMessage(messageOutDto);
     }
 
     @Override
-    public ReviewInPaginationDto getReview(ReviewInPaginationDto reviewInPaginationDto) {
+    public void updateMemberData(ReviewInPortDto updateMemberDataDto) {
+        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(updateMemberDataDto.getMemberUuid());
 
-        ReviewOutPaginationDto reviewOutPortDtoCursorPage = reviewRepositoryPort.getReviewByProductUuid(
-                reviewInPaginationDto);
+        for (ReviewOutPortDto reviewOutPortDto : reviewOutPortDtoList) {
 
-        List<Review> reviewList = reviewDomainService.getReview(reviewOutPortDtoCursorPage.getReviewOutPortDtoList());
-        List<ReviewInPortDto> reviewInPortDtoList = reviewDtoMapper.toDtoList(reviewList);
+            Review updatedReview = reviewDomainService.updateReview(reviewOutPortDto, updateMemberDataDto);
 
-        Boolean hasNext = reviewOutPortDtoCursorPage.getHasNext();
-        Long lastId = reviewOutPortDtoCursorPage.getLastId();
-        LocalDateTime lastCreatedAt = reviewOutPortDtoCursorPage.getLastCreatedAt();
-        Integer pageSize = reviewOutPortDtoCursorPage.getPageSize();
-        Integer page = reviewOutPortDtoCursorPage.getPage();
+            ReviewOutPortDto updatedReviewOutPortDto = reviewDtoMapper.toOutPortDto(updatedReview);
 
-        return reviewDtoMapper.toPaginationDto(reviewInPortDtoList, hasNext, lastId, lastCreatedAt, pageSize, page);
+            reviewRepositoryPort.update(updatedReviewOutPortDto);
+        }
+
+        if(null == updateMemberDataDto.getMemberNickname()) {
+            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateImageDto(updateMemberDataDto));
+        }
+
+        else if (null == updateMemberDataDto.getMemberProfileImage()) {
+            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateNicknameDto(updateMemberDataDto));
+        }
+
     }
 
 }
