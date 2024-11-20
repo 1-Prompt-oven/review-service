@@ -1,6 +1,6 @@
 package com.promptoven.reviewService.global.config;
 
-import com.promptoven.reviewService.adaptor.in.kafka.dto.MessageDto;
+import com.promptoven.reviewService.adaptor.kafka.in.dto.MessageDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
