@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewInPortUpdateRequestDto {
 
-    private Long reviewId;
+    private Long id;
     private String contents;
     private int star;
 
     @Builder
-    public ReviewInPortUpdateRequestDto(Long reviewId, String contents, int star) {
-        this.reviewId = reviewId;
+    public ReviewInPortUpdateRequestDto(Long id, String contents, int star) {
+        this.id = id;
         this.contents = contents;
         this.star = star;
     }

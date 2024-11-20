@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
 
-    Optional<ReviewEntity> findByReviewIdAndIsDeletedFalse(Long reviewId);
+    Optional<ReviewEntity> findByIdAndIsDeletedFalse(Long reviewId);
 
-    List<ReviewEntity> findAllByauthorUuid(String authorUuid);
+    List<ReviewEntity> findAllByAuthorUuid(String authorUuid);
 }

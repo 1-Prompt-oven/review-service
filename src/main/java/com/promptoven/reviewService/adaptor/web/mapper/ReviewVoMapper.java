@@ -22,7 +22,7 @@ public class ReviewVoMapper {
 
     public ReviewInPortUpdateRequestDto toUpdateDto(ReviewUpdateRequestVo reviewUpdateRequestVo) {
         return ReviewInPortUpdateRequestDto.builder()
-                .reviewId(reviewUpdateRequestVo.getReviewId())
+                .id(reviewUpdateRequestVo.getId())
                 .contents(reviewUpdateRequestVo.getContents())
                 .star(reviewUpdateRequestVo.getStar())
                 .build();

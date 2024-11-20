@@ -28,27 +28,28 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void createReview(ReviewInPortCreateRequestDto reviewCreateRequestDto) {
+        // 리뷰 도메인 데이터 -> DB 저장 데이터로 변환
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
+                reviewDomainService.createReview(reviewCreateRequestDto));
 
-        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(reviewDomainService.createReview(reviewCreateRequestDto));
-
-        reviewRepositoryPort.save(reviewPersistenceDto);
-        // TODO 카프카 DTO 리팩토링 -> MessageDTO 명시적으로 변경
-//        messagePort.createReviewMessage(reviewRepositoryPort.save(reviewOutPortDto));
+        // DB 저장 후 리턴 데이터 카프카 메시지로 전송
+        messagePort.createReviewMessage(reviewRepositoryPort.save(reviewPersistenceDto));
     }
 
     @Override
     public void updateReview(ReviewInPortUpdateRequestDto reviewInPortDto) {
 
-        // DB에서 가져오는 데이터를 QueryDto 라고 명명
         ReviewQueryDto reviewQueryDto = reviewRepositoryPort.getReviewByReviewId(
-                reviewInPortDto.getReviewId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
+                reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
-        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(reviewDomainService.updateReview(reviewQueryDto, reviewInPortDto));
+        // 리뷰 도메인 데이터 -> DB 저장 데이터로 변환
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
+                reviewDomainService.updateReview(reviewQueryDto, reviewInPortDto));
 
-        reviewRepositoryPort.update(reviewPersistenceDto);
+        ReviewPersistenceDto savedReviewData = reviewRepositoryPort.update(reviewPersistenceDto);
 
-        // TODO 카프카 DTO 리팩토링
-//        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
+        // TODO 카프카 CDC 적용 예정
+//         MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
 //
 //        messagePort.updateReviewMessage(messageOutDto);
     }
@@ -59,12 +60,13 @@ public class ReviewService implements ReviewUseCase {
         ReviewQueryDto reviewQueryDto = reviewRepositoryPort.getReviewByReviewId(reviewId).orElseThrow(
                 () -> new BaseException(NO_EXIST_REVIEW));
 
-        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(reviewDomainService.deleteReview(reviewQueryDto));
+        // 리뷰 도메인 데이터 -> DB 저장 데이터로 변환
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
+                reviewDomainService.deleteReview(reviewQueryDto));
 
-        reviewRepositoryPort.delete(reviewPersistenceDto);
+        ReviewPersistenceDto savedReviewData = reviewRepositoryPort.delete(reviewPersistenceDto);
 
-//        ReviewOutPortDto savedReviewData = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
-        // TODO 카프카 DTO 리팩토링
+        // TODO 카프카 CDC 적용 예정
 //        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDtoUpdated);
 //
 //        messagePort.deleteReviewMessage(messageOutDto);

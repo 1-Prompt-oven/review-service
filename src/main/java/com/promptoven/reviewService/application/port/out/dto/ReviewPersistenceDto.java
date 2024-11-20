@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReviewPersistenceDto {
+
     private Long id;
     private String productUuid;
     private String authorUuid;

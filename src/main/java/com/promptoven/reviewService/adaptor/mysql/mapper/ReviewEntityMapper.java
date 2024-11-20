@@ -1,7 +1,6 @@
 package com.promptoven.reviewService.adaptor.mysql.mapper;
 
 import com.promptoven.reviewService.adaptor.mysql.entity.ReviewEntity;
-import com.promptoven.reviewService.application.port.out.dto.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.dto.ReviewPersistenceDto;
 import com.promptoven.reviewService.application.port.out.dto.ReviewQueryDto;
 import org.springframework.stereotype.Component;
@@ -9,41 +8,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewEntityMapper {
 
-    public ReviewEntity toEntity(ReviewPersistenceDto reviewOutPortDto) {
+    public ReviewEntity toCreateEntity(ReviewPersistenceDto reviewPersistenceDto) {
         return ReviewEntity.builder()
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .authorUuid(reviewOutPortDto.getAuthorUuid())
-                .star(reviewOutPortDto.getStar())
-                .contents(reviewOutPortDto.getContents())
-                .isDeleted(reviewOutPortDto.getIsDeleted())
+                .productUuid(reviewPersistenceDto.getProductUuid())
+                .authorUuid(reviewPersistenceDto.getAuthorUuid())
+                .star(reviewPersistenceDto.getStar())
+                .contents(reviewPersistenceDto.getContents())
+                .isDeleted(reviewPersistenceDto.getIsDeleted())
                 .build();
     }
 
-    public ReviewEntity toUpdateEntity(ReviewPersistenceDto reviewOutPortDto) {
+    public ReviewEntity toUpdateEntity(ReviewPersistenceDto reviewPersistenceDto) {
         return ReviewEntity.builder()
-                .reviewId(reviewOutPortDto.getId())
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .authorUuid(reviewOutPortDto.getAuthorUuid())
-                .star(reviewOutPortDto.getStar())
-                .contents(reviewOutPortDto.getContents())
-                .isDeleted(reviewOutPortDto.getIsDeleted())
+                .id(reviewPersistenceDto.getId())
+                .productUuid(reviewPersistenceDto.getProductUuid())
+                .authorUuid(reviewPersistenceDto.getAuthorUuid())
+                .star(reviewPersistenceDto.getStar())
+                .contents(reviewPersistenceDto.getContents())
+                .isDeleted(reviewPersistenceDto.getIsDeleted())
                 .build();
     }
 
-    public ReviewEntity toDeleteEntity(ReviewPersistenceDto reviewOutPortDto) {
-        return ReviewEntity.builder()
-                .reviewId(reviewOutPortDto.getId())
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .authorUuid(reviewOutPortDto.getAuthorUuid())
-                .star(reviewOutPortDto.getStar())
-                .contents(reviewOutPortDto.getContents())
-                .isDeleted(reviewOutPortDto.getIsDeleted())
-                .build();
-    }
-
-    public ReviewOutPortDto toDto(ReviewEntity reviewEntity) {
-        return ReviewOutPortDto.builder()
-                .id(reviewEntity.getReviewId())
+    public ReviewPersistenceDto toPersistenceDto(ReviewEntity reviewEntity) {
+        return ReviewPersistenceDto.builder()
+                .id(reviewEntity.getId())
                 .productUuid(reviewEntity.getProductUuid())
                 .authorUuid(reviewEntity.getAuthorUuid())
                 .star(reviewEntity.getStar())
@@ -56,7 +44,7 @@ public class ReviewEntityMapper {
 
     public ReviewQueryDto toQueryDto(ReviewEntity reviewEntity) {
         return ReviewQueryDto.builder()
-                .id(reviewEntity.getReviewId())
+                .id(reviewEntity.getId())
                 .productUuid(reviewEntity.getProductUuid())
                 .authorUuid(reviewEntity.getAuthorUuid())
                 .star(reviewEntity.getStar())

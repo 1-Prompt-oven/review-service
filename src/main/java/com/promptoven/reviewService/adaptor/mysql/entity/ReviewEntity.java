@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "review")
@@ -20,7 +19,7 @@ public class ReviewEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String productUuid;
@@ -38,8 +37,8 @@ public class ReviewEntity extends BaseEntity {
     private Boolean isDeleted;
 
     @Builder
-    public ReviewEntity(Long reviewId, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted) {
-        this.reviewId = reviewId;
+    public ReviewEntity(Long id, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted) {
+        this.id = id;
         this.productUuid = productUuid;
         this.authorUuid = authorUuid;
         this.star = star;

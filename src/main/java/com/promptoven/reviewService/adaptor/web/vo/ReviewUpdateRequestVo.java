@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class ReviewUpdateRequestVo {
 
-    private Long reviewId;
+    private Long id;
     private String contents;
     private int star;
 }

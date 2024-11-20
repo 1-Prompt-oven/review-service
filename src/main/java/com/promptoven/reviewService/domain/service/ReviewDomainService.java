@@ -1,9 +1,7 @@
 package com.promptoven.reviewService.domain.service;
 
 import com.promptoven.reviewService.application.port.in.dto.ReviewInPortCreateRequestDto;
-import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.dto.ReviewInPortUpdateRequestDto;
-import com.promptoven.reviewService.application.port.out.dto.ReviewOutPortDto;
 import com.promptoven.reviewService.application.port.out.dto.ReviewQueryDto;
 import com.promptoven.reviewService.domain.model.Review;
 import org.springframework.stereotype.Service;

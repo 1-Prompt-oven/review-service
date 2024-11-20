@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageOutDto {
 
-    private Long reviewId;
+    private Long id;
     private String productUuid;
     private String authorUuid;
     private int star;
@@ -18,9 +18,9 @@ public class MessageOutDto {
     private Boolean isDeleted;
 
     @Builder
-    public MessageOutDto(Long reviewId, String productUuid, String authorUuid, int star, int previousStar,
+    public MessageOutDto(Long id, String productUuid, String authorUuid, int star, int previousStar,
             String contents, Boolean isDeleted) {
-        this.reviewId = reviewId;
+        this.id = id;
         this.productUuid = productUuid;
         this.authorUuid = authorUuid;
         this.star = star;
