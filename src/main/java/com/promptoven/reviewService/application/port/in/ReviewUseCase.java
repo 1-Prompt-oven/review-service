@@ -1,5 +1,7 @@
 package com.promptoven.reviewService.application.port.in;
 
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
+
 public interface ReviewUseCase {
 
     void createReview(ReviewInPortDto reviewInPortDto);

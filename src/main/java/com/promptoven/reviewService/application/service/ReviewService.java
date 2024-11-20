@@ -3,7 +3,7 @@ package com.promptoven.reviewService.application.service;
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
@@ -30,15 +30,9 @@ public class ReviewService implements ReviewUseCase {
     @Override
     public void createReview(ReviewInPortDto reviewInPortDto) {
 
-        Review review = reviewDomainService.createReview(reviewInPortDto);
+        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toOutPortDto(reviewDomainService.createReview(reviewInPortDto));
 
-        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toOutPortDto(review);
-
-        ReviewOutPortDto savedReviewData = reviewRepositoryPort.save(reviewOutPortDto);
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDto);
-
-        messagePort.createReviewMessage(messageOutDto);
+        messagePort.createReviewMessage(reviewRepositoryPort.save(reviewOutPortDto));
     }
 
     @Override
@@ -47,14 +41,11 @@ public class ReviewService implements ReviewUseCase {
         ReviewOutPortDto reviewOutPortDto = reviewRepositoryPort.getReviewByReviewId(
                 reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
-        Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto));
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
+        reviewRepositoryPort.update(reviewOutPortDtoUpdated);
 
-        ReviewOutPortDto savedReviewData = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(savedReviewData.getId(),
-                reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
+        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
 
         messagePort.updateReviewMessage(messageOutDto);
     }
@@ -78,7 +69,8 @@ public class ReviewService implements ReviewUseCase {
 
     @Override
     public void updateMemberData(ReviewInPortDto updateMemberDataDto) {
-        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(updateMemberDataDto.getMemberUuid());
+        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByauthorUuid(
+                updateMemberDataDto.getauthorUuid());
 
         for (ReviewOutPortDto reviewOutPortDto : reviewOutPortDtoList) {
 
@@ -89,11 +81,9 @@ public class ReviewService implements ReviewUseCase {
             reviewRepositoryPort.update(updatedReviewOutPortDto);
         }
 
-        if(null == updateMemberDataDto.getMemberNickname()) {
+        if (null == updateMemberDataDto.getMemberNickname()) {
             messagePort.updateReviewMessage(reviewDtoMapper.toUpdateImageDto(updateMemberDataDto));
-        }
-
-        else if (null == updateMemberDataDto.getMemberProfileImage()) {
+        } else if (null == updateMemberDataDto.getMemberProfileImage()) {
             messagePort.updateReviewMessage(reviewDtoMapper.toUpdateNicknameDto(updateMemberDataDto));
         }
 

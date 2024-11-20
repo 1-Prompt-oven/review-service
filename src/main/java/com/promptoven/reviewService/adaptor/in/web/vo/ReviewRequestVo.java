@@ -7,7 +7,7 @@ import lombok.ToString;
 public class ReviewRequestVo {
 
     private String productUuid;
-    private String memberUuid;
+    private String authorUuid;
     private String memberProfileImage;
     private String memberNickname;
     private int star;

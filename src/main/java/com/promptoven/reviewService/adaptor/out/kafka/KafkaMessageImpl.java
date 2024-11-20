@@ -2,6 +2,7 @@ package com.promptoven.reviewService.adaptor.out.kafka;
 
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.MessagePort;
+import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +18,7 @@ public class KafkaMessageImpl implements MessagePort {
     private static final String DELETE_TOPIC = "delete_review_event";
 
     @Override
-    public void createReviewMessage(MessageOutDto messageOutDto) {
+    public void createReviewMessage(ReviewOutPortDto messageOutDto) {
         messageTemplate(CREATE_TOPIC, messageOutDto);
     }
 
@@ -27,11 +28,11 @@ public class KafkaMessageImpl implements MessagePort {
     }
 
     @Override
-    public void deleteReviewMessage(MessageOutDto messageOutDto) {
+    public void deleteReviewMessage(ReviewOutPortDto messageOutDto) {
         messageTemplate(DELETE_TOPIC, messageOutDto);
     }
 
-    private void messageTemplate(String topic, MessageOutDto messageOutDto) {
+    private void messageTemplate(String topic, ReviewOutPortDto messageOutDto) {
         ProducerRecord<String, Object> record = new ProducerRecord<>(topic, messageOutDto);
         kafkaTemplate.send(record);
     }

@@ -1,20 +1,20 @@
 package com.promptoven.reviewService.adaptor.in.kafka.mapper;
 
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MessageMapper {
-    public ReviewInPortDto toNicknameUpdateDto(String memberUuid, String memberNickname) {
+    public ReviewInPortDto toNicknameUpdateDto(String authorUuid, String memberNickname) {
         return ReviewInPortDto.builder()
-                .memberUuid(memberUuid)
+                .authorUuid(authorUuid)
                 .memberNickname(memberNickname)
                 .build();
     }
 
-    public ReviewInPortDto toImageUpdateDto(String memberUuid, String memberProfileImage) {
+    public ReviewInPortDto toImageUpdateDto(String authorUuid, String memberProfileImage) {
         return ReviewInPortDto.builder()
-                .memberUuid(memberUuid)
+                .authorUuid(authorUuid)
                 .memberProfileImage(memberProfileImage)
                 .build();
     }

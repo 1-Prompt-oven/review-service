@@ -1,10 +1,9 @@
-package com.promptoven.reviewService.application.port.in;
+package com.promptoven.reviewService.application.port.in.dto;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
@@ -12,7 +11,7 @@ public class ReviewInPortDto {
 
     private Long id;
     private String productUuid;
-    private String memberUuid;
+    private String authorUuid;
     private String memberProfileImage;
     private String memberNickname;
     private int star;
@@ -22,12 +21,12 @@ public class ReviewInPortDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public ReviewInPortDto(Long id, String productUuid, String memberUuid, String memberProfileImage,
+    public ReviewInPortDto(Long id, String productUuid, String authorUuid, String memberProfileImage,
             String memberNickname, int star, String contents, Boolean isDeleted, LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
         this.productUuid = productUuid;
-        this.memberUuid = memberUuid;
+        this.authorUuid = authorUuid;
         this.memberProfileImage = memberProfileImage;
         this.memberNickname = memberNickname;
         this.star = star;

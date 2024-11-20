@@ -42,8 +42,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryPort {
     }
 
     @Override
-    public List<ReviewOutPortDto> getReviewListByMemberUuid(String memberUuid) {
-        return reviewJpaRepository.findAllByMemberUuid(memberUuid).stream()
+    public List<ReviewOutPortDto> getReviewListByauthorUuid(String authorUuid) {
+        return reviewJpaRepository.findAllByauthorUuid(authorUuid).stream()
                 .map(reviewEntityMapper::toDto)
                 .toList();
     }

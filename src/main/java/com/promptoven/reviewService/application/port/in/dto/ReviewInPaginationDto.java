@@ -1,4 +1,4 @@
-package com.promptoven.reviewService.application.port.in;
+package com.promptoven.reviewService.application.port.in.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

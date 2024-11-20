@@ -3,7 +3,6 @@ package com.promptoven.reviewService.adaptor.in.web.controller;
 import com.promptoven.reviewService.adaptor.in.web.mapper.ReviewVoMapper;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewRequestVo;
 import com.promptoven.reviewService.adaptor.in.web.vo.ReviewUpdateRequestVo;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import com.promptoven.reviewService.global.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +29,8 @@ public class ReviewController {
     @PostMapping
     public BaseResponse<Void> createReview(@RequestBody ReviewRequestVo reviewRequestVo) {
 
-        ReviewInPortDto reviewInPortDto = reviewVoMapper.toInPortDtoDto(reviewRequestVo);
-
-        reviewUseCase.createReview(reviewInPortDto);
+        // 입력값 vo -> Dto 변환 후 createReview 로직 수행
+        reviewUseCase.createReview(reviewVoMapper.toInPortDtoDto(reviewRequestVo));
 
         return new BaseResponse<>();
     }
@@ -41,9 +39,8 @@ public class ReviewController {
     @PutMapping
     public BaseResponse<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewRequestVo) {
 
-        ReviewInPortDto reviewInPortDto = reviewVoMapper.toUpdateDto(reviewRequestVo);
-
-        reviewUseCase.updateReview(reviewInPortDto);
+        // 수정값 vo -> Dto 변환 후 updateReview 로직 수행
+        reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewRequestVo));
 
         return new BaseResponse<>();
     }

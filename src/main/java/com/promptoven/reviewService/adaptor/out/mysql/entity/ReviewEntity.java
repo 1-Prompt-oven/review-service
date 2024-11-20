@@ -22,35 +22,26 @@ public class ReviewEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String productUuid;
 
-    @Column(nullable = false)
-    private String memberUuid;
-
-    @Column(nullable = false)
-    private String memberProfileImage;
-
-    @Column(nullable = false)
-    private String memberNickname;
+    @Column(nullable = false, length = 50)
+    private String authorUuid;
 
     @Column(nullable = false)
     private int star;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String contents;
 
     @Column(nullable = false)
     private Boolean isDeleted;
 
     @Builder
-    public ReviewEntity(Long reviewId, String productUuid, String memberUuid, String memberProfileImage,
-            String memberNickname, int star, String contents, Boolean isDeleted) {
+    public ReviewEntity(Long reviewId, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted) {
         this.reviewId = reviewId;
         this.productUuid = productUuid;
-        this.memberUuid = memberUuid;
-        this.memberProfileImage = memberProfileImage;
-        this.memberNickname = memberNickname;
+        this.authorUuid = authorUuid;
         this.star = star;
         this.contents = contents;
         this.isDeleted = isDeleted;

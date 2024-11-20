@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class MessageDto {
-    private String memberUuid;
+    private String authorUuid;
     private String memberProfileImage;
     private String memberNickname;
 }

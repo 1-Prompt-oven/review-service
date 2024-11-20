@@ -11,7 +11,7 @@ public class ReviewEntityMapper {
     public ReviewEntity toEntity(ReviewOutPortDto reviewOutPortDto) {
         return ReviewEntity.builder()
                 .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
+                .authorUuid(reviewOutPortDto.getauthorUuid())
                 .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
                 .memberNickname(reviewOutPortDto.getMemberNickname())
                 .star(reviewOutPortDto.getStar())
@@ -24,7 +24,7 @@ public class ReviewEntityMapper {
         return ReviewEntity.builder()
                 .reviewId(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
+                .authorUuid(reviewOutPortDto.getauthorUuid())
                 .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
                 .memberNickname(reviewOutPortDto.getMemberNickname())
                 .star(reviewOutPortDto.getStar())
@@ -37,7 +37,7 @@ public class ReviewEntityMapper {
         return ReviewEntity.builder()
                 .reviewId(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
+                .authorUuid(reviewOutPortDto.getauthorUuid())
                 .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
                 .memberNickname(reviewOutPortDto.getMemberNickname())
                 .star(reviewOutPortDto.getStar())
@@ -50,19 +50,13 @@ public class ReviewEntityMapper {
         return ReviewOutPortDto.builder()
                 .id(reviewEntity.getReviewId())
                 .productUuid(reviewEntity.getProductUuid())
-                .memberUuid(reviewEntity.getMemberUuid())
-                .memberProfileImage(reviewEntity.getMemberProfileImage())
-                .memberNickname(reviewEntity.getMemberNickname())
+                .authorUuid(reviewEntity.getAuthorUuid())
                 .star(reviewEntity.getStar())
                 .contents(reviewEntity.getContents())
                 .isDeleted(reviewEntity.getIsDeleted())
                 .createdAt(reviewEntity.getCreatedAt())
                 .updatedAt(reviewEntity.getUpdatedAt())
                 .build();
-    }
-
-    public Optional<ReviewOutPortDto> toDto(Optional<ReviewEntity> reviewEntity) {
-        return reviewEntity.map(this::toDto);
     }
 
 }

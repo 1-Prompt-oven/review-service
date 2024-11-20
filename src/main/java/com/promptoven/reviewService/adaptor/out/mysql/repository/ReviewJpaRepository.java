@@ -9,5 +9,5 @@ public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long> {
 
     Optional<ReviewEntity> findByReviewIdAndIsDeletedFalse(Long reviewId);
 
-    List<ReviewEntity> findAllByMemberUuid(String memberUuid);
+    List<ReviewEntity> findAllByauthorUuid(String authorUuid);
 }

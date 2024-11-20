@@ -14,7 +14,7 @@ public interface ReviewRepositoryPort {
 
     Optional<ReviewOutPortDto> getReviewByReviewId(Long reviewId);
 
-    List<ReviewOutPortDto> getReviewListByMemberUuid(String memberUuid);
+    List<ReviewOutPortDto> getReviewListByAuthorUuid(String authorUuid);
 
 }
 

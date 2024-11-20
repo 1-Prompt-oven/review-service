@@ -1,6 +1,6 @@
 package com.promptoven.reviewService.application.mapper;
 
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.out.MessageOutDto;
 import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
 import com.promptoven.reviewService.domain.model.Review;
@@ -13,9 +13,7 @@ public class ReviewDtoMapper {
         return ReviewOutPortDto.builder()
                 .id(review.getId())
                 .productUuid(review.getProductUuid())
-                .memberUuid(review.getMemberUuid())
-                .memberProfileImage(review.getMemberProfileImage())
-                .memberNickname(review.getMemberNickname())
+                .authorUuid(review.getAuthorUuid())
                 .star(review.getStar())
                 .contents(review.getContents())
                 .isDeleted(review.getIsDeleted())
@@ -24,22 +22,20 @@ public class ReviewDtoMapper {
                 .build();
     }
 
-    public MessageOutDto toMessageDto(Long reviewId, ReviewOutPortDto reviewOutPortDto) {
+    public MessageOutDto toMessageDto(ReviewOutPortDto reviewOutPortDto) {
         return MessageOutDto.builder()
-                .reviewId(reviewId)
+                .reviewId(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
-                .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
-                .memberNickname(reviewOutPortDto.getMemberNickname())
+                .authorUuid(reviewOutPortDto.getAuthorUuid())
                 .contents(reviewOutPortDto.getContents())
                 .isDeleted(reviewOutPortDto.getIsDeleted())
                 .star(reviewOutPortDto.getStar())
                 .build();
     }
 
-    public MessageOutDto toUpdateMessageDto(Long reviewId, ReviewOutPortDto reviewOutPortDto, int previousStar) {
+    public MessageOutDto toUpdateMessageDto(ReviewOutPortDto reviewOutPortDto, int previousStar) {
         return MessageOutDto.builder()
-                .reviewId(reviewId)
+                .reviewId(reviewOutPortDto.getId())
                 .productUuid(reviewOutPortDto.getProductUuid())
                 .contents(reviewOutPortDto.getContents())
                 .star(reviewOutPortDto.getStar())
@@ -49,14 +45,14 @@ public class ReviewDtoMapper {
 
     public MessageOutDto toUpdateNicknameDto(ReviewInPortDto reviewInPortDto) {
         return MessageOutDto.builder()
-                .memberUuid(reviewInPortDto.getMemberUuid())
+                .authorUuid(reviewInPortDto.getAuthorUuid())
                 .memberNickname(reviewInPortDto.getMemberNickname())
                 .build();
     }
 
     public MessageOutDto toUpdateImageDto(ReviewInPortDto reviewInPortDto) {
         return MessageOutDto.builder()
-                .memberUuid(reviewInPortDto.getMemberUuid())
+                .authorUuid(reviewInPortDto.getAuthorUuid())
                 .memberProfileImage(reviewInPortDto.getMemberProfileImage())
                 .build();
     }

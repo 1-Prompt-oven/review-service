@@ -2,7 +2,7 @@ package com.promptoven.reviewService.adaptor.in.kafka.consumer;
 
 import com.promptoven.reviewService.adaptor.in.kafka.dto.MessageDto;
 import com.promptoven.reviewService.adaptor.in.kafka.mapper.MessageMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortDto;
 import com.promptoven.reviewService.application.port.in.ReviewUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,7 +19,7 @@ public class KafkaConsumer {
     public void consumeUpdateNickname(MessageDto message) {
 
         ReviewInPortDto nicknameUpdateDto =
-        messageMapper.toNicknameUpdateDto(message.getMemberUuid(),message.getMemberNickname());
+        messageMapper.toNicknameUpdateDto(message.getauthorUuid(),message.getMemberNickname());
 
         reviewUseCase.updateMemberData(nicknameUpdateDto);
     }
@@ -28,7 +28,7 @@ public class KafkaConsumer {
     public void consumeUpdateImage(MessageDto message) {
 
         ReviewInPortDto imageUpdateDto =
-                messageMapper.toImageUpdateDto(message.getMemberUuid(), message.getMemberProfileImage());
+                messageMapper.toImageUpdateDto(message.getauthorUuid(), message.getMemberProfileImage());
 
         reviewUseCase.updateMemberData(imageUpdateDto);
     }

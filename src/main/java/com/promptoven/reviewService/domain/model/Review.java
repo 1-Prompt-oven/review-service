@@ -12,9 +12,7 @@ public class Review {
 
     private Long id; // 비지니스 로직 또는 프론트에서 사용 할 수 있는 값
     private String productUuid;
-    private String memberUuid;
-    private String memberProfileImage;
-    private String memberNickname;
+    private String authorUuid;
     private int star;
     private String contents;
     private Boolean isDeleted; // soft delete
@@ -22,13 +20,11 @@ public class Review {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Review(Long id, String productUuid, String memberUuid, String memberProfileImage, String memberNickname,
-            int star, String contents, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Review(Long id, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.productUuid = productUuid;
-        this.memberUuid = memberUuid;
-        this.memberProfileImage = memberProfileImage;
-        this.memberNickname = memberNickname;
+        this.authorUuid = authorUuid;
         this.star = star;
         this.contents = contents;
         this.isDeleted = isDeleted;
