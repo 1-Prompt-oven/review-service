@@ -38,15 +38,13 @@ public class ReviewService implements ReviewUseCase {
     @Override
     public void updateReview(ReviewInPortUpdateRequestDto reviewUpdateRequestDto) {
 
-        ReviewQueryDto reviewQueryDto = reviewRepositoryPort.getReviewByReviewId(
-                reviewUpdateRequestDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
+        ReviewQueryDto savedReviewData = reviewRepositoryPort.getReviewByReviewId(reviewUpdateRequestDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
-        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
-                reviewDomainService.updateReview(reviewQueryDto, reviewUpdateRequestDto));
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(reviewDomainService.updateReview(savedReviewData, reviewUpdateRequestDto));
 
         ReviewQueryDto updatedReviewData = reviewRepositoryPort.update(reviewPersistenceDto);
 
-        messagePort.updateReviewMessage(reviewDtoMapper.toUpdateMessageDto(reviewPersistenceDto, updatedReviewData));
+        messagePort.updateReviewMessage(reviewDtoMapper.toUpdateMessageDto(updatedReviewData, savedReviewData));
     }
 
     @Override

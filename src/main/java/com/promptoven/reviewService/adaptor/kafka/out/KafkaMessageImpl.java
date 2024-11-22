@@ -5,12 +5,10 @@ import com.promptoven.reviewService.application.port.out.dto.Message.CreateEvent
 import com.promptoven.reviewService.application.port.out.dto.Message.DeleteEventMessageDto;
 import com.promptoven.reviewService.application.port.out.dto.Message.UpdateEventMessageDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaMessageImpl implements MessagePort {
@@ -22,7 +20,6 @@ public class KafkaMessageImpl implements MessagePort {
 
     @Override
     public void createReviewMessage(CreateEventMessageDto createEventMessageDto) {
-        log.info("createReviewMessage : {}", createEventMessageDto.toString());
         messageTemplate(CREATE_TOPIC, createEventMessageDto);
     }
 

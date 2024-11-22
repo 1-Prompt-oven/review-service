@@ -19,13 +19,13 @@ public class ReviewDomainService {
                 .build();
     }
 
-    public Review updateReview(ReviewQueryDto reviewQueryDto, ReviewInPortUpdateRequestDto reviewInPortDto) {
+    public Review updateReview(ReviewQueryDto reviewQueryDto, ReviewInPortUpdateRequestDto reviewUpdateRequestDto) {
         return Review.builder()
                 .id(reviewQueryDto.getId())
                 .productUuid(reviewQueryDto.getProductUuid())
                 .authorUuid(reviewQueryDto.getAuthorUuid())
-                .star(reviewInPortDto.getStar())
-                .contents(reviewInPortDto.getContents())
+                .star(reviewUpdateRequestDto.getStar())
+                .contents(reviewUpdateRequestDto.getContents())
                 .isDeleted(reviewQueryDto.getIsDeleted())
                 .build();
     }

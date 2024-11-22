@@ -1,6 +1,7 @@
 package com.promptoven.reviewService.application.mapper;
 
 import com.promptoven.reviewService.application.port.in.dto.ReviewInPortCreateRequestDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortUpdateRequestDto;
 import com.promptoven.reviewService.application.port.out.dto.Message.CreateEventMessageDto;
 import com.promptoven.reviewService.application.port.out.dto.Message.DeleteEventMessageDto;
 import com.promptoven.reviewService.application.port.out.dto.Message.UpdateEventMessageDto;
@@ -39,14 +40,14 @@ public class ReviewDtoMapper {
                 .build();
     }
 
-    public UpdateEventMessageDto toUpdateMessageDto(ReviewPersistenceDto reviewPersistenceDto,
-            ReviewQueryDto reviewQueryDto) {
+    public UpdateEventMessageDto toUpdateMessageDto(ReviewQueryDto updatedReviewData,
+            ReviewQueryDto savedReviewData) {
         return UpdateEventMessageDto.builder()
-                .reviewId(reviewQueryDto.getId())
-                .productUuid(reviewQueryDto.getProductUuid())
-                .contents(reviewPersistenceDto.getContents())
-                .star(reviewPersistenceDto.getStar())
-                .previousStar(reviewQueryDto.getStar())
+                .reviewId(savedReviewData.getId())
+                .productUuid(savedReviewData.getProductUuid())
+                .contents(updatedReviewData.getContents())
+                .star(updatedReviewData.getStar())
+                .previousStar(savedReviewData.getStar())
                 .build();
     }
 
