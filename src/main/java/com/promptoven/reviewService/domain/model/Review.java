@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Review {
 
-    private Long id; // 비지니스 로직 또는 프론트에서 사용 할 수 있는 값
+    private Long id;
     private String productUuid;
     private String authorUuid;
     private int star;
     private String contents;
-    private Boolean isDeleted; // soft delete
+    private Boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

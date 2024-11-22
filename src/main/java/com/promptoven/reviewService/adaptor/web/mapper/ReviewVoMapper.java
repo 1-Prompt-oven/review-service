@@ -13,8 +13,8 @@ public class ReviewVoMapper {
         return ReviewInPortCreateRequestDto.builder()
                 .productUuid(reviewCreateRequestVo.getProductUuid())
                 .authorUuid(reviewCreateRequestVo.getAuthorUuid())
-                .memberProfileImage(reviewCreateRequestVo.getMemberProfileImage())
-                .memberNickname(reviewCreateRequestVo.getMemberNickname())
+                .authorProfileImage(reviewCreateRequestVo.getAuthorProfileImage())
+                .authorNickname(reviewCreateRequestVo.getAuthorNickname())
                 .contents(reviewCreateRequestVo.getContents())
                 .star(reviewCreateRequestVo.getStar())
                 .build();

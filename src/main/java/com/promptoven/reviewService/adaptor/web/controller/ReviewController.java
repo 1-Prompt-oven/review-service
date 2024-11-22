@@ -29,7 +29,6 @@ public class ReviewController {
     @PostMapping
     public BaseResponse<Void> createReview(@RequestBody ReviewCreateRequestVo reviewCreateRequestVo) {
 
-        // 입력값 vo -> Dto 변환 후 createReview 로직 수행
         reviewUseCase.createReview(reviewVoMapper.toCreateDto(reviewCreateRequestVo));
 
         return new BaseResponse<>();
@@ -39,7 +38,6 @@ public class ReviewController {
     @PutMapping
     public BaseResponse<Void> updateReview(@RequestBody ReviewUpdateRequestVo reviewUpdateRequestVo) {
 
-        // 수정값 vo -> Dto 변환 후 updateReview 로직 수행
         reviewUseCase.updateReview(reviewVoMapper.toUpdateDto(reviewUpdateRequestVo));
 
         return new BaseResponse<>();

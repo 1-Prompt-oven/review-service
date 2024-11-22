@@ -10,18 +10,18 @@ public class ReviewInPortCreateRequestDto {
 
     private String productUuid;
     private String authorUuid;
-    private String memberProfileImage;
-    private String memberNickname;
+    private String authorProfileImage;
+    private String authorNickname;
     private String contents;
     private int star;
 
     @Builder
-    public ReviewInPortCreateRequestDto(String productUuid, String authorUuid, String memberProfileImage,
-            String memberNickname, String contents, int star) {
+    public ReviewInPortCreateRequestDto(String productUuid, String authorUuid, String authorProfileImage,
+            String authorNickname, String contents, int star) {
         this.productUuid = productUuid;
         this.authorUuid = authorUuid;
-        this.memberProfileImage = memberProfileImage;
-        this.memberNickname = memberNickname;
+        this.authorProfileImage = authorProfileImage;
+        this.authorNickname = authorNickname;
         this.contents = contents;
         this.star = star;
     }

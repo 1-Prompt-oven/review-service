@@ -7,8 +7,8 @@ public class ReviewCreateRequestVo {
 
     private String productUuid;
     private String authorUuid;
-    private String memberProfileImage;
-    private String memberNickname;
+    private String authorProfileImage;
+    private String authorNickname;
     private String contents;
     private int star;
 
