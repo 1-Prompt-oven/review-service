@@ -3,21 +3,18 @@ package com.promptoven.reviewService.application.service;
 import static com.promptoven.reviewService.global.common.response.BaseResponseStatus.NO_EXIST_REVIEW;
 
 import com.promptoven.reviewService.application.mapper.ReviewDtoMapper;
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
-import com.promptoven.reviewService.application.port.in.ReviewUseCase;
-import com.promptoven.reviewService.application.port.out.MessageOutDto;
-import com.promptoven.reviewService.application.port.out.MessagePort;
-import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
-import com.promptoven.reviewService.application.port.out.ReviewRepositoryPort;
-import com.promptoven.reviewService.domain.model.Review;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortCreateRequestDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortUpdateRequestDto;
+import com.promptoven.reviewService.application.port.in.usecase.ReviewUseCase;
+import com.promptoven.reviewService.application.port.out.call.MessagePort;
+import com.promptoven.reviewService.application.port.out.call.ReviewRepositoryPort;
+import com.promptoven.reviewService.application.port.out.dto.ReviewPersistenceDto;
+import com.promptoven.reviewService.application.port.out.dto.ReviewQueryDto;
 import com.promptoven.reviewService.domain.service.ReviewDomainService;
 import com.promptoven.reviewService.global.error.BaseException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewService implements ReviewUseCase {
@@ -28,75 +25,39 @@ public class ReviewService implements ReviewUseCase {
     private final MessagePort messagePort;
 
     @Override
-    public void createReview(ReviewInPortDto reviewInPortDto) {
+    public void createReview(ReviewInPortCreateRequestDto reviewCreateRequestDto) {
 
-        Review review = reviewDomainService.createReview(reviewInPortDto);
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
+                reviewDomainService.createReview(reviewCreateRequestDto));
 
-        ReviewOutPortDto reviewOutPortDto = reviewDtoMapper.toOutPortDto(review);
+        ReviewQueryDto savedReviewData = reviewRepositoryPort.save(reviewPersistenceDto);
 
-        ReviewOutPortDto savedReviewData = reviewRepositoryPort.save(reviewOutPortDto);
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDto);
-
-        messagePort.createReviewMessage(messageOutDto);
+        messagePort.createReviewMessage(reviewDtoMapper.toCreateMessageDto(reviewCreateRequestDto, savedReviewData));
     }
 
     @Override
-    public void updateReview(ReviewInPortDto reviewInPortDto) {
+    public void updateReview(ReviewInPortUpdateRequestDto reviewUpdateRequestDto) {
 
-        ReviewOutPortDto reviewOutPortDto = reviewRepositoryPort.getReviewByReviewId(
-                reviewInPortDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
+        ReviewQueryDto savedReviewData = reviewRepositoryPort.getReviewByReviewId(reviewUpdateRequestDto.getId()).orElseThrow(() -> new BaseException(NO_EXIST_REVIEW));
 
-        Review review = reviewDomainService.updateReview(reviewOutPortDto, reviewInPortDto);
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(reviewDomainService.updateReview(savedReviewData, reviewUpdateRequestDto));
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
+        ReviewQueryDto updatedReviewData = reviewRepositoryPort.update(reviewPersistenceDto);
 
-        ReviewOutPortDto savedReviewData = reviewRepositoryPort.update(reviewOutPortDtoUpdated);
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toUpdateMessageDto(savedReviewData.getId(),
-                reviewOutPortDtoUpdated, reviewOutPortDto.getStar());
-
-        messagePort.updateReviewMessage(messageOutDto);
+        messagePort.updateReviewMessage(reviewDtoMapper.toUpdateMessageDto(updatedReviewData, savedReviewData));
     }
 
     @Override
     public void deleteReview(Long reviewId) {
 
-        ReviewOutPortDto reviewTransactionDto = reviewRepositoryPort.getReviewByReviewId(reviewId).orElseThrow(
+        ReviewQueryDto reviewQueryDto = reviewRepositoryPort.getReviewByReviewId(reviewId).orElseThrow(
                 () -> new BaseException(NO_EXIST_REVIEW));
 
-        Review review = reviewDomainService.deleteReview(reviewTransactionDto);
+        ReviewPersistenceDto reviewPersistenceDto = reviewDtoMapper.toPersistenceDto(
+                reviewDomainService.deleteReview(reviewQueryDto));
 
-        ReviewOutPortDto reviewOutPortDtoUpdated = reviewDtoMapper.toOutPortDto(review);
+        ReviewQueryDto deletedReviewData = reviewRepositoryPort.delete(reviewPersistenceDto);
 
-        ReviewOutPortDto savedReviewData = reviewRepositoryPort.delete(reviewOutPortDtoUpdated);
-
-        MessageOutDto messageOutDto = reviewDtoMapper.toMessageDto(savedReviewData.getId(), reviewOutPortDtoUpdated);
-
-        messagePort.deleteReviewMessage(messageOutDto);
+        messagePort.deleteReviewMessage(reviewDtoMapper.toDeleteMessageDto(deletedReviewData));
     }
-
-    @Override
-    public void updateMemberData(ReviewInPortDto updateMemberDataDto) {
-        List<ReviewOutPortDto> reviewOutPortDtoList = reviewRepositoryPort.getReviewListByMemberUuid(updateMemberDataDto.getMemberUuid());
-
-        for (ReviewOutPortDto reviewOutPortDto : reviewOutPortDtoList) {
-
-            Review updatedReview = reviewDomainService.updateReview(reviewOutPortDto, updateMemberDataDto);
-
-            ReviewOutPortDto updatedReviewOutPortDto = reviewDtoMapper.toOutPortDto(updatedReview);
-
-            reviewRepositoryPort.update(updatedReviewOutPortDto);
-        }
-
-        if(null == updateMemberDataDto.getMemberNickname()) {
-            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateImageDto(updateMemberDataDto));
-        }
-
-        else if (null == updateMemberDataDto.getMemberProfileImage()) {
-            messagePort.updateReviewMessage(reviewDtoMapper.toUpdateNicknameDto(updateMemberDataDto));
-        }
-
-    }
-
 }

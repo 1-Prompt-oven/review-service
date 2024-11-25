@@ -1,4 +1,4 @@
-package com.promptoven.reviewService.domain.model;
+package com.promptoven.reviewService.application.port.out.dto;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class Review {
+public class ReviewQueryDto {
 
     private Long id;
     private String productUuid;
@@ -19,7 +19,7 @@ public class Review {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Review(Long id, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted,
+    public ReviewQueryDto(Long id, String productUuid, String authorUuid, int star, String contents, Boolean isDeleted,
             LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.productUuid = productUuid;

@@ -1,21 +1,23 @@
 package com.promptoven.reviewService.application.mapper;
 
-import com.promptoven.reviewService.application.port.in.ReviewInPortDto;
-import com.promptoven.reviewService.application.port.out.MessageOutDto;
-import com.promptoven.reviewService.application.port.out.ReviewOutPortDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortCreateRequestDto;
+import com.promptoven.reviewService.application.port.in.dto.ReviewInPortUpdateRequestDto;
+import com.promptoven.reviewService.application.port.out.dto.Message.CreateEventMessageDto;
+import com.promptoven.reviewService.application.port.out.dto.Message.DeleteEventMessageDto;
+import com.promptoven.reviewService.application.port.out.dto.Message.UpdateEventMessageDto;
+import com.promptoven.reviewService.application.port.out.dto.ReviewPersistenceDto;
+import com.promptoven.reviewService.application.port.out.dto.ReviewQueryDto;
 import com.promptoven.reviewService.domain.model.Review;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewDtoMapper {
 
-    public ReviewOutPortDto toOutPortDto(Review review) {
-        return ReviewOutPortDto.builder()
+    public ReviewPersistenceDto toPersistenceDto(Review review) {
+        return ReviewPersistenceDto.builder()
                 .id(review.getId())
                 .productUuid(review.getProductUuid())
-                .memberUuid(review.getMemberUuid())
-                .memberProfileImage(review.getMemberProfileImage())
-                .memberNickname(review.getMemberNickname())
+                .authorUuid(review.getAuthorUuid())
                 .star(review.getStar())
                 .contents(review.getContents())
                 .isDeleted(review.getIsDeleted())
@@ -24,40 +26,36 @@ public class ReviewDtoMapper {
                 .build();
     }
 
-    public MessageOutDto toMessageDto(Long reviewId, ReviewOutPortDto reviewOutPortDto) {
-        return MessageOutDto.builder()
-                .reviewId(reviewId)
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .memberUuid(reviewOutPortDto.getMemberUuid())
-                .memberProfileImage(reviewOutPortDto.getMemberProfileImage())
-                .memberNickname(reviewOutPortDto.getMemberNickname())
-                .contents(reviewOutPortDto.getContents())
-                .isDeleted(reviewOutPortDto.getIsDeleted())
-                .star(reviewOutPortDto.getStar())
+    public CreateEventMessageDto toCreateMessageDto(ReviewInPortCreateRequestDto createRequestDto,
+            ReviewQueryDto reviewQueryDto) {
+        return CreateEventMessageDto.builder()
+                .reviewId(reviewQueryDto.getId())
+                .productUuid(reviewQueryDto.getProductUuid())
+                .authorUuid(reviewQueryDto.getAuthorUuid())
+                .authorProfileImage(createRequestDto.getAuthorProfileImage())
+                .authorNickname(createRequestDto.getAuthorNickname())
+                .star(reviewQueryDto.getStar())
+                .contents(reviewQueryDto.getContents())
+                .isDeleted(reviewQueryDto.getIsDeleted())
                 .build();
     }
 
-    public MessageOutDto toUpdateMessageDto(Long reviewId, ReviewOutPortDto reviewOutPortDto, int previousStar) {
-        return MessageOutDto.builder()
-                .reviewId(reviewId)
-                .productUuid(reviewOutPortDto.getProductUuid())
-                .contents(reviewOutPortDto.getContents())
-                .star(reviewOutPortDto.getStar())
-                .previousStar(previousStar)
+    public UpdateEventMessageDto toUpdateMessageDto(ReviewQueryDto updatedReviewData,
+            ReviewQueryDto savedReviewData) {
+        return UpdateEventMessageDto.builder()
+                .reviewId(savedReviewData.getId())
+                .productUuid(savedReviewData.getProductUuid())
+                .contents(updatedReviewData.getContents())
+                .star(updatedReviewData.getStar())
+                .previousStar(savedReviewData.getStar())
                 .build();
     }
 
-    public MessageOutDto toUpdateNicknameDto(ReviewInPortDto reviewInPortDto) {
-        return MessageOutDto.builder()
-                .memberUuid(reviewInPortDto.getMemberUuid())
-                .memberNickname(reviewInPortDto.getMemberNickname())
-                .build();
-    }
-
-    public MessageOutDto toUpdateImageDto(ReviewInPortDto reviewInPortDto) {
-        return MessageOutDto.builder()
-                .memberUuid(reviewInPortDto.getMemberUuid())
-                .memberProfileImage(reviewInPortDto.getMemberProfileImage())
+    public DeleteEventMessageDto toDeleteMessageDto(ReviewQueryDto reviewQueryDto) {
+        return DeleteEventMessageDto.builder()
+                .reviewId(reviewQueryDto.getId())
+                .productUuid(reviewQueryDto.getProductUuid())
+                .star(reviewQueryDto.getStar())
                 .build();
     }
 }
