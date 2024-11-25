@@ -93,7 +93,7 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server:
-  port: 0  # 운영 환경에서도 랜덤 포트 사용 (Eureka 사용)
+  port: 0
 
 kafka:
   text-bootstrap-servers: kafka-1:9092,kafka-2:9092,kafka-3:9092
