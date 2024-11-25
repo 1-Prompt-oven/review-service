@@ -37,7 +37,6 @@ jobs:
           script: |
             sudo docker rm -f review-service || true
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/review-service
-            mkdir /home/ubuntu/review-service
             cd ~/review-service
             echo "SPRING_PROFILES_ACTIVE=prod" > .env
             sudo docker-compose up -d
