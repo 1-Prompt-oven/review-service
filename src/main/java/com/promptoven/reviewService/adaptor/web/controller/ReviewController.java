@@ -44,11 +44,10 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 삭제 API", tags = {"리뷰"})
-    @DeleteMapping("/{reviewId}/{purchaseProductId}")
-    public BaseResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId,
-            @PathVariable("purchaseProductId") Long purchaseProductId) {
+    @DeleteMapping("/{reviewId}")
+    public BaseResponse<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
 
-        reviewUseCase.deleteReview(reviewId, purchaseProductId);
+        reviewUseCase.deleteReview(reviewId);
 
         return new BaseResponse<>();
     }
