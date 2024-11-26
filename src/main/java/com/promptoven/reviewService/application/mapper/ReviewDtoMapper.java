@@ -31,7 +31,6 @@ public class ReviewDtoMapper {
         return CreateEventMessageDto.builder()
                 .reviewId(reviewQueryDto.getId())
                 .productUuid(reviewQueryDto.getProductUuid())
-                .purchaseProductId(createRequestDto.getPurchaseProductId())
                 .authorUuid(reviewQueryDto.getAuthorUuid())
                 .authorProfileImage(createRequestDto.getAuthorProfileImage())
                 .authorNickname(createRequestDto.getAuthorNickname())
@@ -52,10 +51,10 @@ public class ReviewDtoMapper {
                 .build();
     }
 
-    public DeleteEventMessageDto toDeleteMessageDto(ReviewQueryDto reviewQueryDto, Long purchaseProductId) {
+    public DeleteEventMessageDto toDeleteMessageDto(ReviewQueryDto reviewQueryDto) {
         return DeleteEventMessageDto.builder()
                 .reviewId(reviewQueryDto.getId())
-                .purchaseProductId(purchaseProductId)
+                .authorUuid(reviewQueryDto.getAuthorUuid())
                 .productUuid(reviewQueryDto.getProductUuid())
                 .star(reviewQueryDto.getStar())
                 .build();
