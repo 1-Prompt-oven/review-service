@@ -1,6 +1,8 @@
 spring:
   application:
     name: review-service
+  profiles:
+    active: local
   servlet:
     multipart:
       max-file-size: 20MB
@@ -34,6 +36,8 @@ spring:
   config:
     activate:
       on-profile: local
+    import:
+      - classpath:eventTopic.yaml
   datasource:
     url: jdbc:mysql://localhost:3307/reviewService
     username: root
@@ -47,6 +51,8 @@ spring:
       dialect: org.hibernate.dialect.MySQLDialect
       format_sql: true
     generate-ddl: true
+  kafka:
+    text-bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
 
 eureka:
   client:
@@ -61,13 +67,15 @@ eureka:
 server:
   port: 0  # random port for local development
 
-kafka:
-  bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+
 
 # prod 설정
 ---
 spring:
   config:
+    import:
+      - classpath:eventTopic.yaml
+      - "optional:configserver:http://config-server:8888"
     activate:
       on-profile: prod
   datasource:
@@ -81,7 +89,13 @@ spring:
     show-sql: true
     properties:
       dialect: org.hibernate.dialect.MySQLDialect
-
+  kafka:
+    text-bootstrap-servers: kafka-1:9092,kafka-2:9092,kafka-3:9092
+  cloud:
+    config:
+      name: review-service,eventTopic
+      fail-fast: false
+  
 eureka:
   client:
     serviceUrl:
@@ -93,7 +107,5 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server:
-  port: 0  # 운영 환경에서도 랜덤 포트 사용 (Eureka 사용)
+  port: 0
 
-kafka:
-  text-bootstrap-servers: kafka-1:9092,kafka-2:9092,kafka-3:9092
