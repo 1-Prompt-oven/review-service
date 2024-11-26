@@ -48,7 +48,7 @@ public class ReviewService implements ReviewUseCase {
     }
 
     @Override
-    public void deleteReview(Long reviewId) {
+    public void deleteReview(Long reviewId, Long purchaseProductId) {
 
         ReviewQueryDto reviewQueryDto = reviewRepositoryPort.getReviewByReviewId(reviewId).orElseThrow(
                 () -> new BaseException(NO_EXIST_REVIEW));
@@ -58,6 +58,6 @@ public class ReviewService implements ReviewUseCase {
 
         ReviewQueryDto deletedReviewData = reviewRepositoryPort.delete(reviewPersistenceDto);
 
-        messagePort.deleteReviewMessage(reviewDtoMapper.toDeleteMessageDto(deletedReviewData));
+        messagePort.deleteReviewMessage(reviewDtoMapper.toDeleteMessageDto(deletedReviewData, purchaseProductId));
     }
 }

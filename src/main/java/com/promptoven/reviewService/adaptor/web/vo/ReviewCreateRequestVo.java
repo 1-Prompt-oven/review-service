@@ -6,6 +6,7 @@ import lombok.Getter;
 public class ReviewCreateRequestVo {
 
     private String productUuid;
+    private Long purchaseProductId;
     private String authorUuid;
     private String authorProfileImage;
     private String authorNickname;
