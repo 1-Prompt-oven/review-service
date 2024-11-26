@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 public class DeleteEventMessageDto {
 
     private Long reviewId;
+    private Long purchaseProductId;
     private String productUuid;
     private int star;
 
     @Builder
-    public DeleteEventMessageDto(Long reviewId, String productUuid, int star) {
+    public DeleteEventMessageDto(Long reviewId, Long purchaseProductId, String productUuid, int star) {
         this.reviewId = reviewId;
+        this.purchaseProductId = purchaseProductId;
         this.productUuid = productUuid;
         this.star = star;
     }

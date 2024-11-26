@@ -6,6 +6,7 @@ import com.promptoven.reviewService.application.port.out.dto.Message.DeleteEvent
 import com.promptoven.reviewService.application.port.out.dto.Message.UpdateEventMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +15,30 @@ import org.springframework.stereotype.Component;
 public class KafkaMessageImpl implements MessagePort {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private static final String CREATE_TOPIC = "create_review_event"; // 각각 이벤트의 발행
-    private static final String UPDATE_TOPIC = "update_review_event";
-    private static final String DELETE_TOPIC = "delete_review_event";
+
+
+    @Value("${review-create-event}")
+    private String createTopic;
+
+    @Value("${review-update-event}")
+    private String updateTopic;
+
+    @Value("${review-delete-event}")
+    private String deleteTopic;
 
     @Override
     public void createReviewMessage(CreateEventMessageDto createEventMessageDto) {
-        messageTemplate(CREATE_TOPIC, createEventMessageDto);
+        messageTemplate(createTopic, createEventMessageDto);
     }
 
     @Override
     public void updateReviewMessage(UpdateEventMessageDto messageOutDto) {
-        messageTemplate(UPDATE_TOPIC, messageOutDto);
+        messageTemplate(updateTopic, messageOutDto);
     }
 
     @Override
     public void deleteReviewMessage(DeleteEventMessageDto messageOutDto) {
-        messageTemplate(DELETE_TOPIC, messageOutDto);
+        messageTemplate(deleteTopic, messageOutDto);
     }
 
     private <M> void messageTemplate(String topic, M message) {
