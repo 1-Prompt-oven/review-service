@@ -16,7 +16,6 @@ public class KafkaMessageImpl implements MessagePort {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-
     @Value("${review-create-event}")
     private String createTopic;
 

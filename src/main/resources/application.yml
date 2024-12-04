@@ -25,7 +25,7 @@ springdoc:
 
 logging:
   level:
-    org.example.product_admin_service: DEBUG
+    com.promptoven.reviewService: DEBUG
 
 server:
   shutdown: graceful
@@ -65,7 +65,7 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server:
-  port: 0  # random port for local development
+  port: 8282  # random port for local development
 
 
 
