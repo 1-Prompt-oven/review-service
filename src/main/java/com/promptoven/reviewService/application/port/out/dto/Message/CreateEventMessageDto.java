@@ -10,6 +10,7 @@ public class CreateEventMessageDto {
 
     private Long reviewId;
     private String productUuid;
+    private String sellerUuid;
     private String authorUuid;
     private String authorProfileImage;
     private String authorNickname;
@@ -18,10 +19,11 @@ public class CreateEventMessageDto {
     private Boolean isDeleted;
 
     @Builder
-    public CreateEventMessageDto(Long reviewId, String productUuid, String authorUuid, String authorProfileImage,
+    public CreateEventMessageDto(Long reviewId, String productUuid, String sellerUuid, String authorUuid, String authorProfileImage,
             String authorNickname, int star, String contents, Boolean isDeleted) {
         this.reviewId = reviewId;
         this.productUuid = productUuid;
+        this.sellerUuid = sellerUuid;
         this.authorUuid = authorUuid;
         this.authorProfileImage = authorProfileImage;
         this.authorNickname = authorNickname;
