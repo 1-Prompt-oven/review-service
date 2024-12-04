@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class ReviewInPortCreateRequestDto {
 
     private String productUuid;
+    private String sellerUuid;
     private String authorUuid;
     private String authorProfileImage;
     private String authorNickname;
@@ -16,9 +17,10 @@ public class ReviewInPortCreateRequestDto {
     private int star;
 
     @Builder
-    public ReviewInPortCreateRequestDto(String productUuid, String authorUuid, String authorProfileImage,
+    public ReviewInPortCreateRequestDto(String productUuid, String sellerUuid, String authorUuid, String authorProfileImage,
             String authorNickname, String contents, int star) {
         this.productUuid = productUuid;
+        this.sellerUuid = sellerUuid;
         this.authorUuid = authorUuid;
         this.authorProfileImage = authorProfileImage;
         this.authorNickname = authorNickname;
